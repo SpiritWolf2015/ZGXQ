@@ -54,7 +54,9 @@ namespace com.gzc.zgxq.game {
         public static void Startup ( ) {
             //sq->位置下标, pc->哪颗棋子代号
             int sq, pc;
-            sdPlayer = vlWhite = vlBlack = nDistance = 0;
+            sdPlayer = 0;   //0为红方先走，即玩家先走。测试改为1，则是让AI先走。
+            vlWhite = vlBlack = nDistance = 0;
+
             // 初始化为零
             for ( int i = 0; i < 256; i++ ) {
                 ucpcSquares[i] = 0;
@@ -105,7 +107,7 @@ namespace com.gzc.zgxq.game {
                 // TODO: 纯C#的计时器怎么写，现在子线程停止不鸟。
                 // 超过时间（15分钟），就终止搜索
                 if ( ts.Seconds > ViewConstant.thinkDeeplyTime ) {
-                    Debuger.Log("GameLogic->SearchMain( ) 搜索时间到，停止搜索");
+                    Debuger.Log(string.Format("GameLogic->SearchMain( ) 搜索时间到，停止搜索. ts.Seconds={0}", ts.Seconds));
                     break;
                 }
             }
