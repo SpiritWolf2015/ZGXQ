@@ -7,14 +7,22 @@ using System.Collections;
 public class IndexTriger : MonoBehaviour {
 
     /// <summary>
-    /// 在10-9二维数的下标是多少
+    /// 在10-9二维数的下标是第几行
     /// </summary>
-    public byte m_i, m_j;
+    public byte m_i;
     /// <summary>
-    /// 在256二维数的下标是多少
+    /// 在10-9二维数的下标是第几列
     /// </summary>
-    public byte m_row, m_column;
+    public byte m_j;
 
+    /// <summary>
+    /// 在256（16*16）二维数的下标是第几行
+    /// </summary>
+    public byte m_row;
+    /// <summary>
+    /// 在256（16*16）二维数的下标是第几列
+    /// </summary>
+    public byte m_column;
 
     DragQiZi m_dragQiZi;
     bool m_hasQiZi;
@@ -39,6 +47,13 @@ public class IndexTriger : MonoBehaviour {
     void OnTriggerExit ( Collider other ) {       
         m_hasQiZi = false;
         m_dragQiZi = null;
+    }
+
+    public int toIndex256 ( ) {         
+        // 二维数组 a[INDEX1][INDEX2] 转换成一维数组b[INDEX1*INDEX2]，则a[i][j] 对应一维数组的索引 b[INDEX2*i+j]
+        // 只与列数有关，与行数无关。
+        int index256 = 16 * m_row + m_column;
+        return index256;
     }
 
 }

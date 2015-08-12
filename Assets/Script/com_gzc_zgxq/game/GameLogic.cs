@@ -54,7 +54,7 @@ namespace com.gzc.zgxq.game {
         public static void Startup ( ) {
             //sq->位置下标, pc->哪颗棋子代号
             int sq, pc;
-            sdPlayer = 0;   //0为红方先走，即玩家先走。测试改为1，则是让AI先走。
+            sdPlayer = 1;   //0为红方先走，即玩家先走。测试改为1，则是让AI先走。
             vlWhite = vlBlack = nDistance = 0;
 
             // 初始化为零

@@ -5,16 +5,38 @@
     /// </summary>
     public static class Constant {
 
+        #region 棋子编号
+        
         /// <summary>
-        ///  棋子编号
+        ///  棋子编号-将帅
         /// </summary>
-        public const int PIECE_KING = 0;
-        public const int PIECE_ADVISOR = 1;
-        public const int PIECE_BISHOP = 2;
-        public const int PIECE_KNIGHT = 3;
-        public const int PIECE_ROOK = 4;
-        public const int PIECE_CANNON = 5;
-        public const int PIECE_PAWN = 6;
+        public const byte PIECE_KING = 0;
+        /// <summary>
+        /// 棋子编号-士
+        /// </summary>
+        public const byte PIECE_ADVISOR = 1;
+        /// <summary>
+        /// 棋子编号-象
+        /// </summary>
+        public const byte PIECE_BISHOP = 2;
+        /// <summary>
+        /// 棋子编号-马
+        /// </summary>
+        public const byte PIECE_KNIGHT = 3;
+        /// <summary>
+        /// 棋子编号-车
+        /// </summary>
+        public const byte PIECE_ROOK = 4;
+        /// <summary>
+        /// 棋子编号-炮
+        /// </summary>
+        public const byte PIECE_CANNON = 5;
+        /// <summary>
+        /// 棋子编号-兵
+        /// </summary>
+        public const byte PIECE_PAWN = 6;
+
+        #endregion 棋子编号
 
         /// <summary>
         /// 搜索出胜负的分值界限，超出此值就说明已经搜索出杀棋了
@@ -29,7 +51,7 @@
         /// <summary>
         /// 最大的搜索深度
         /// </summary>
-        public const int LIMIT_DEPTH = 30;
+        public const byte LIMIT_DEPTH = 30;
 
         /// <summary>
         /// 棋盘初始设置，将各个棋子放到初始位置
@@ -54,6 +76,7 @@
 	      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 	};
 
+        
 
         //2行3列
         //int[ ][ ] aa = { new int[3] { 1, 2, 3 }, new int[3] { 48, 48, 48 } };
@@ -193,7 +216,7 @@
         /// <summary>
         /// 判断棋子是否在九宫的数组
         /// </summary>
-        public static short[ ] ccInFort = {
+        public static byte[ ] ccInFort = {
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -215,7 +238,7 @@
         /// <summary>
         /// 判断棋子是否在棋盘中的数组,用长度为256（16*16）的一维数组来表示棋盘的是为了方便计算机进行位操作，求横坐标只用和111做与运算，纵坐标右移4位即可，效率很高
         /// </summary>
-        public static short[ ] ccInBoard = new short[ ] {
+        public static byte[ ] ccInBoard = new byte[ ] {
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -233,32 +256,33 @@
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	};
+        //sbyte s = 1;//sbyte127到-128
 
         /// <summary>
         /// 最大的生成走法数
         /// </summary>
-        public const int MAX_GEN_MOVES = 128;
+        public const byte MAX_GEN_MOVES = 128;
         /// <summary>
         /// 先行权分值
         /// </summary>
-        public const int ADVANCED_VALUE = 3;
-
+        public const byte ADVANCED_VALUE = 3;
+        
         /// <summary>
         /// 帅(将)的步长
         /// </summary>
-        public static readonly short[ ] ccKingDelta = { -16, -1, 1, 16 };
+        public static readonly sbyte[ ] ccKingDelta = { -16, -1, 1, 16 };
         /// <summary>
         /// 仕(士)的步长
         /// </summary>
-        public static readonly short[ ] ccAdvisorDelta = { -17, -15, 15, 17 };
+        public static readonly sbyte[ ] ccAdvisorDelta = { -17, -15, 15, 17 };
         /// <summary>
         /// 马的步长，以帅(将)的步长作为马腿
         /// </summary>
-        public static readonly short[ ][ ] ccKnightDelta = { new short[2] { -33, -31 }, new short[2] { -18, 14 }, new short[2] { -14, 18 }, new short[2] { 31, 33 } };
+        public static readonly sbyte[ ][ ] ccKnightDelta = { new sbyte[2] { -33, -31 }, new sbyte[2] { -18, 14 }, new sbyte[2] { -14, 18 }, new sbyte[2] { 31, 33 } };
         /// <summary>
         /// 马被将军的步长，以仕(士)的步长作为马腿
         /// </summary>
-        public static readonly short[ ][ ] ccKnightCheckDelta = { new short[2] { -33, -18 }, new short[2] { -31, -14 }, new short[2] { 14, 31 }, new short[2] { 18, 33 } };
+        public static readonly sbyte[ ][ ] ccKnightCheckDelta = { new sbyte[2] { -33, -18 }, new sbyte[2] { -31, -14 }, new sbyte[2] { 14, 31 }, new sbyte[2] { 18, 33 } };
     }
 
 }

@@ -74,8 +74,10 @@ public class IndexCtrl : MonoBehaviour {
                 // 设置在256数组中的下标
                 indexTriger.m_row = row;
                 indexTriger.m_column = column;
+                int index256 = indexTriger.toIndex256( );
 
-                go.name = "index" + "【" + i + ", " + j + "】，其在256的下标：【" + row + ", " + column + "】";
+                go.name = string.Format("index【{0}, {1}】，其在256的下标：【{2}】，256的二维下标【{3}, {4}】", i, j, index256, indexTriger.m_row, indexTriger.m_column);
+                
                 go.SetActive(true);
                 // 加入到下标检测球列表中去
                 m_indexSpheres.Add(go);
@@ -88,13 +90,34 @@ public class IndexCtrl : MonoBehaviour {
         }
     }
 
+    //==============棋盘表示数组下标转换==============
+
+    #region 10-9转256
+
     /// <summary>
-    /// 棋盘表示256数组的下标转成10-9数组的下标
+    /// 棋盘表示10-9数组下标，转成256（16*16二维数组表示）数组下标，返回256（16*16二维数组表示）数组的第几行坐标
     /// </summary>
-    /// <param name="index256"></param>
-    /// <returns></returns>
-    int index256ToIndex10_9 (int index256) {
-        return 0;
+    /// <param name="row">棋盘表示10-9数组第几行下标</param>
+    /// <param name="col">棋盘表示10-9数组第几列下标</param>
+    /// <returns>返回256（16*16二维数组表示）数组的第几行坐标</returns>
+    public static int index10_9ToIndex256_RowIndex (int row,int col) {
+        int index256RowIndex = (16 * (3 + row) + 3 + col) / 16;
+        return index256RowIndex;
     }
+
+    /// <summary>
+    /// 棋盘表示10-9数组下标，转成256（16*16二维数组表示）数组下标，返回256（16*16二维数组表示）数组的第几列坐标
+    /// </summary>
+    /// <param name="row">棋盘表示10-9数组第几行下标</param>
+    /// <param name="col">棋盘表示10-9数组第几列下标</param>
+    /// <returns>返回256（16*16二维数组表示）数组的第几列坐标</returns>
+    public static int index10_9ToIndex256_ColIndex (int row, int col) {
+        int index256ColIndex = (16 * (3 + row) + 3 + col) % 8;
+        return index256ColIndex;
+    }
+
+    #endregion 10-9转256
+
+    //==============棋盘表示数组下标转换==============
 
 }
