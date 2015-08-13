@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 负责棋盘坐标球的生成，棋盘棋子的交互以及对棋子移动的监视
 /// </summary>
-public class IndexCtrl : MonoBehaviour {
+public class IndexCtrl : MonoSingleton<IndexCtrl> {
 
     public Transform m_parent;
     public GameObject m_indexSphere;
@@ -47,6 +47,10 @@ public class IndexCtrl : MonoBehaviour {
     /// </summary>
     public static byte s_xzgz;
 
+    /// <summary>
+    /// 【棋盘表示256一维数组下标——下标检测球GameObject】
+    /// </summary>
+    private Dictionary<int, GameObject> m_hashIndex256QiZiPos = new Dictionary<int, GameObject>( );
 
     void Start ( ) {
         // 复制 10 * 9 个坐标球
@@ -71,13 +75,16 @@ public class IndexCtrl : MonoBehaviour {
                 // 设置下标
                 indexTriger.m_i = i;
                 indexTriger.m_j = j;
-                // 设置在256数组中的下标
+                // 设置在256（16*16）2维数组中的下标
                 indexTriger.m_row = row;
                 indexTriger.m_column = column;
+                // 设置在256  1维数组中的下标
                 int index256 = indexTriger.toIndex256( );
 
                 go.name = string.Format("index【{0}, {1}】，其在256的下标：【{2}】，256的二维下标【{3}, {4}】", i, j, index256, indexTriger.m_row, indexTriger.m_column);
-                
+                // 将该下标检测球GameObject加到HASH中去，方便AI移动棋子等操作快速找到位置。
+                m_hashIndex256QiZiPos.Add(index256, go);
+
                 go.SetActive(true);
                 // 加入到下标检测球列表中去
                 m_indexSpheres.Add(go);
@@ -88,6 +95,13 @@ public class IndexCtrl : MonoBehaviour {
             pos.y -= m_offsetY;
             row++;
         }
+    }
+
+    public GameObject getIndexSphereGo (int index256) {
+        if (m_hashIndex256QiZiPos.ContainsKey(index256)) {
+            return m_hashIndex256QiZiPos[index256];
+        }
+        return null;
     }
 
     //==============棋盘表示数组下标转换==============

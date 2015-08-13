@@ -171,9 +171,9 @@ namespace com.gzc.zgxq.game {
                 // 用List排序好后，赋值回数组。只对产生的走法排序，数组中其他值不变
                 moves[a] = s_sortTempList[a];
             }           
-            for ( int i2 = 0; i2 < moves.Length; i2++ ) {
-                Debuger.LogError(string.Format("moves[{0}] = {1}", i2, moves[i2]));
-            }
+            //for ( int i2 = 0; i2 < moves.Length; i2++ ) {
+            //    Debuger.LogWarning(string.Format("moves[{0}] = {1}", i2, moves[i2]));
+            //}
 
             #endregion 根据历史表排序
             

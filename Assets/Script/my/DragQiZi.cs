@@ -4,7 +4,7 @@ using com.gzc.zgxq.game;
 
 
 /// <summary>
-/// 拖动棋子触屏处理
+/// 挂在棋子的脚本，拖动棋子触屏处理
 /// </summary>
 public class DragQiZi : MonoBehaviour {
 

@@ -2,6 +2,7 @@
 using System.Threading;
 using System;
 using com.gzc.zgxq.game;
+using com.gzc.ThreadLockEvent;
 
 namespace com.gzc.zgxq.view {
 
@@ -171,7 +172,15 @@ namespace com.gzc.zgxq.view {
                 int sqDst = Chess_LoadUtil.DST(GameLogic.mvResult); // 得到目标位置的数组下标
                 int pcCaptured = ucpcSquares[sqDst];// 得到目的格子的棋子
                 Debuger.LogWarning(string.Format("GameView onTouchEvent函数，走法起点={0}，走法终点={1}, 得到目的格子的棋子={2}", sqSrc, sqDst, pcCaptured));
+
+                // 线程安全事件管理器，分发事件，到UI线程处理，棋子的移动
                 // AI移动棋子（U3D API），移动到 256数组【sqDst】
+                AIMoveEvent aIMoveEvent = new AIMoveEvent( );
+                aIMoveEvent.from = sqSrc;
+                aIMoveEvent.to = sqDst;
+                // 派发事件，AI移动棋子事件
+                EventDispatcher.Instance( ).DispatchEvent(AIMoveEvent.AI_MOVE_EVNET, aIMoveEvent);
+                Debuger.Log("GameView onTouchEvent函数->派发事件，AI移动棋子事件");
 
                 GameLogic.MakeMove(GameLogic.mvResult, 0);
 

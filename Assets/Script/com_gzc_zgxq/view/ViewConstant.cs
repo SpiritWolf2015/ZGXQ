@@ -6,24 +6,24 @@ namespace com.gzc.zgxq.view {
     /// <summary>
     ///  View常量，工具方法
     /// </summary>
-    public class ViewConstant {
+    public static class ViewConstant {
 
         /// <summary>
         /// 是否为开始或者暂停
         /// </summary>
         public static bool isnoStart = false;
 
-        public static readonly string START = "开始";
-        public static readonly string PAUSE = "暂停";
+        public const string START = "开始";
+        public const string PAUSE = "暂停";
 
         /// <summary>
         /// 难度系数
         /// </summary>
-        public static int nanduXS = 1;
+        public static byte nanduXS = 1;
         /// <summary>
         /// 单位：毫秒，即15分钟
         /// </summary>
-        public static int zTime = 900000;   //900*1000
+        public static int zTime = 900 * 1000; 
         /// <summary>
         /// 总时间
         /// </summary>
