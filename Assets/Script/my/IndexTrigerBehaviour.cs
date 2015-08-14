@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// 挂在下标检查球上的脚本，判断棋盘上的某个点是否有棋子
 /// </summary>
-public class IndexTriger : MonoBehaviour {
+public class IndexTrigerBehaviour : MonoBehaviour {
 
     /// <summary>
     /// 在10-9二维数的下标是第几行
@@ -25,7 +25,7 @@ public class IndexTriger : MonoBehaviour {
     public byte m_column;
 
 
-    private DragQiZi m_dragQiZi;
+    private DragQiZiBehaviour m_dragQiZi;
     /// <summary>
     /// 该检查球这有棋子
     /// </summary>
@@ -52,8 +52,8 @@ public class IndexTriger : MonoBehaviour {
             m_qiZiGameObject = other.gameObject;
             Debuger.Log("棋子" + other.name + "落在坐标检测球" + this.name + "上!");
 
-            if (null != other.GetComponent<DragQiZi>( )) {
-                m_dragQiZi = other.GetComponent<DragQiZi>( );
+            if (null != other.GetComponent<DragQiZiBehaviour>( )) {
+                m_dragQiZi = other.GetComponent<DragQiZiBehaviour>( );
                 m_dragQiZi.m_IndexTriger = this;
             } else {
                 Debuger.LogError(string.Format("{0}棋子GameObject上没有DragQiZi脚本", other.name));

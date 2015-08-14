@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 负责棋盘坐标球的生成，棋盘棋子的交互以及对棋子移动的监视
 /// </summary>
-public class IndexCtrl : MonoSingleton<IndexCtrl> {
+public class IndexCtrlBehaviour : MonoSingleton<IndexCtrlBehaviour> {
 
     public Transform m_parent;
     public GameObject m_indexSphere;
@@ -71,7 +71,7 @@ public class IndexCtrl : MonoSingleton<IndexCtrl> {
                 GameObject go = Instantiate(m_indexSphere, pos, Quaternion.identity) as GameObject;
                 go.transform.parent = m_parent;
 
-                IndexTriger indexTriger = go.GetComponent<IndexTriger>( );
+                IndexTrigerBehaviour indexTriger = go.GetComponent<IndexTrigerBehaviour>( );
                 // 设置下标
                 indexTriger.m_i = i;
                 indexTriger.m_j = j;

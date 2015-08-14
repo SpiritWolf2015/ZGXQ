@@ -160,7 +160,7 @@ namespace com.gzc.zgxq.view {
                 Debuger.LogWarning("GameView onTouchEvent函数，电脑走棋线程开始");
                 ViewConstant.endTime = ViewConstant.zTime;// 时间初始化
 
-                isRedPlayChess = false;// 正在下棋
+                isRedPlayChess = true;// 正在下棋
                 cMfleg = false;// 正在下棋标志
 
                 draw( );// 重绘方法

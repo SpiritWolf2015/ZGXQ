@@ -7,7 +7,7 @@ namespace com.gzc.zgxq {
     /// <summary>
     /// 游戏的控制器
     /// </summary>
-    public class GameManagerBehaviour : MonoBehaviour {
+    public class GameManagerBehaviour : MonoSingleton<GameManagerBehaviour> {
 
         /// <summary>
         /// 游戏界面View
@@ -42,8 +42,25 @@ namespace com.gzc.zgxq {
             Debuger.Log(this + ", goToGameView");
         }
 
+        #region 游戏逻辑控制
+
+        void onNewGame ( ) { }
+
+        void onStartGame ( ) { }
+
+        void onPauseGame ( ) { }
+
+        // 悔棋
+        void onUndo ( ) { }
+
+        void onTimeOver ( ) { }
+
+        void onSound ( ) { }
+
+        // 难度等级
+        void onLevelOfDifficulty ( ) { }
+
+        #endregion 游戏逻辑控制
+
     }
-
-
 }
-

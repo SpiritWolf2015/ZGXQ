@@ -1160,7 +1160,6 @@ GameObject:
   - 114: {fileID: 276846498}
   - 65: {fileID: 276846497}
   - 114: {fileID: 276846496}
-  - 114: {fileID: 276846495}
   m_Layer: 5
   m_Name: Button_NewGame
   m_TagString: Untagged
@@ -1182,22 +1181,6 @@ Transform:
   - {fileID: 1795519882}
   m_Father: {fileID: 1539825632}
   m_RootOrder: 0
---- !u!114 &276846495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135,
-    type: 2}
-  m_PrefabInternal: {fileID: 1371916795}
-  m_GameObject: {fileID: 276846493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d44bc69c2ca5f943b845318866dc1bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClip: {fileID: 8300000, guid: b5083cfe83bb875479bd797c61594131, type: 3}
-  trigger: 0
-  volume: 1
-  pitch: 1
 --- !u!114 &276846496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1499,7 +1482,6 @@ GameObject:
   - 114: {fileID: 335495686}
   - 65: {fileID: 335495685}
   - 114: {fileID: 335495684}
-  - 114: {fileID: 335495683}
   m_Layer: 5
   m_Name: Button_Start
   m_TagString: Untagged
@@ -1521,22 +1503,6 @@ Transform:
   - {fileID: 1449008823}
   m_Father: {fileID: 1539825632}
   m_RootOrder: 1
---- !u!114 &335495683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135,
-    type: 2}
-  m_PrefabInternal: {fileID: 439687420}
-  m_GameObject: {fileID: 335495681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d44bc69c2ca5f943b845318866dc1bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClip: {fileID: 8300000, guid: b5083cfe83bb875479bd797c61594131, type: 3}
-  trigger: 0
-  volume: 1
-  pitch: 1
 --- !u!114 &335495684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2276,7 +2242,8 @@ Prefab:
       propertyPath: onClick.Array.data[0].mMethodName
       value: buttonStart
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_RootGameObject: {fileID: 335495681}
   m_IsPrefabParent: 0
@@ -3870,7 +3837,8 @@ Prefab:
       propertyPath: onClick.Array.data[0].mMethodName
       value: buttonSound
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_RootGameObject: {fileID: 2024313158}
   m_IsPrefabParent: 0
@@ -4439,7 +4407,8 @@ Prefab:
       propertyPath: onClick.Array.data[0].mMethodName
       value: buttonUndo
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_RootGameObject: {fileID: 1224630164}
   m_IsPrefabParent: 0
@@ -5736,7 +5705,6 @@ GameObject:
   - 114: {fileID: 1224630169}
   - 65: {fileID: 1224630168}
   - 114: {fileID: 1224630167}
-  - 114: {fileID: 1224630166}
   m_Layer: 5
   m_Name: Button_Undo
   m_TagString: Untagged
@@ -5758,22 +5726,6 @@ Transform:
   - {fileID: 557795963}
   m_Father: {fileID: 1539825632}
   m_RootOrder: 2
---- !u!114 &1224630166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135,
-    type: 2}
-  m_PrefabInternal: {fileID: 936895325}
-  m_GameObject: {fileID: 1224630164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d44bc69c2ca5f943b845318866dc1bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClip: {fileID: 8300000, guid: b5083cfe83bb875479bd797c61594131, type: 3}
-  trigger: 0
-  volume: 1
-  pitch: 1
 --- !u!114 &1224630167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6455,7 +6407,8 @@ Prefab:
       propertyPath: onClick.Array.data[0].mMethodName
       value: buttonNewGame
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: fee46b827274e694aa251e2d36700135, type: 2}
   m_RootGameObject: {fileID: 276846493}
   m_IsPrefabParent: 0
@@ -7168,7 +7121,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1539825631}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 352, y: 198, z: 0}
+  m_LocalPosition: {x: 432.999969, y: 243.499985, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 276846494}
@@ -8185,7 +8138,6 @@ GameObject:
   - 114: {fileID: 2024313163}
   - 65: {fileID: 2024313162}
   - 114: {fileID: 2024313161}
-  - 114: {fileID: 2024313160}
   m_Layer: 5
   m_Name: Button_Sound
   m_TagString: Untagged
@@ -8207,22 +8159,6 @@ Transform:
   - {fileID: 1599167325}
   m_Father: {fileID: 1539825632}
   m_RootOrder: 5
---- !u!114 &2024313160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: fee46b827274e694aa251e2d36700135,
-    type: 2}
-  m_PrefabInternal: {fileID: 851449477}
-  m_GameObject: {fileID: 2024313158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d44bc69c2ca5f943b845318866dc1bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClip: {fileID: 8300000, guid: b5083cfe83bb875479bd797c61594131, type: 3}
-  trigger: 0
-  volume: 1
-  pitch: 1
 --- !u!114 &2024313161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8667,7 +8603,7 @@ Transform:
   m_GameObject: {fileID: 2128032343}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .00505050505, y: .00505050505, z: .00505050505}
+  m_LocalScale: {x: .00410677632, y: .00410677632, z: .00410677632}
   m_Children:
   - {fileID: 2115903537}
   - {fileID: 1539825632}
