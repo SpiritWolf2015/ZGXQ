@@ -9,7 +9,7 @@ namespace com.gzc.zgxq.game {
     /// 该类通过最大最小搜索，alpha-beta搜索，迭代加深搜索，
     /// alpha截断，beta截断等算法来共同搜索出最佳下棋步骤。
     /// </summary>
-    public static class GameLogic {
+    public static class AiMoveSearch {
 
         /// <summary>
         /// 电脑走的一步棋
@@ -162,7 +162,7 @@ namespace com.gzc.zgxq.game {
             // 在进行alpha-beta搜索过程时，对其局面下的所有走法进行排序，排序依据为历史表，历史表数组的下标代表走法，
             // 其值为在该步骤下的深度值，所以，每次搜索时就可以先搜索最好的走法。减少对后面的搜索次数。
             s_sortTempList.Sort(( index1, index2 ) => {
-                int value = GameLogic.nHistoryTable[index2] - GameLogic.nHistoryTable[index1];
+                int value = AiMoveSearch.nHistoryTable[index2] - AiMoveSearch.nHistoryTable[index1];
                 Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 历史表排序={0}", value));
                 return value;
             });           

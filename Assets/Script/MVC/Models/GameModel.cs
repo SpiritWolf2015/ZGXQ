@@ -8,13 +8,10 @@ namespace SocialPoint.Examples.MVC {
 
         // Use this for initialization
         public GameModel ( ) {
-
+            this.ResetTimer( );
         }
 
-
-       
-
-       
+        #region about event
 
         public event Action NewGameEvent;
         public event Action StartGameEvent;
@@ -25,12 +22,10 @@ namespace SocialPoint.Examples.MVC {
         public event Action TimeOverEvent;
 
         public event Action SoundEvent;
-        public event Action LevelOfDifficultyEvent;
-
-        public int GameTime { get; private set; }
+        public event Action LevelOfDifficultyEvent;        
 
         public void NewGame ( ) {
-            Debug.Log(string.Format("GameModel->NewGame (  )"));
+            Debuger.Log(string.Format("GameModel->NewGame (  )"));
             OnNewGame( );
         }
 
@@ -41,7 +36,7 @@ namespace SocialPoint.Examples.MVC {
         }
 
         public void PauseGame ( ) {
-            Debug.Log(string.Format("GameModel->PauseGame (  )"));
+            Debuger.Log(string.Format("GameModel->PauseGame (  )"));
             OnPauseGame( );
         }
 
@@ -52,7 +47,7 @@ namespace SocialPoint.Examples.MVC {
         }
 
         public void StartGame ( ) {
-            Debug.Log(string.Format("GameModel->StartGame (  )"));
+            Debuger.Log(string.Format("GameModel->StartGame (  )"));
             OnStartGame( );
         }
 
@@ -63,7 +58,7 @@ namespace SocialPoint.Examples.MVC {
         }
 
         public void GameOver ( ) {
-            Debug.Log(string.Format("GameModel->GameOver (  )"));
+            Debuger.Log(string.Format("GameModel->GameOver (  )"));
             OnGameOver( );
         }
 
@@ -74,7 +69,7 @@ namespace SocialPoint.Examples.MVC {
         }
 
         public void Undo ( ) {
-            Debug.Log(string.Format("GameModel->Undo (  )"));
+            Debuger.Log(string.Format("GameModel->Undo (  )"));
             OnUndo( );
         }
 
@@ -86,7 +81,7 @@ namespace SocialPoint.Examples.MVC {
         }
 
         public void TimeOver ( ) {
-            Debug.Log(string.Format("GameModel->TimeOver (  )"));
+            Debuger.Log(string.Format("GameModel->TimeOver (  )"));
             OnTimeOver( );
         }
 
@@ -94,10 +89,12 @@ namespace SocialPoint.Examples.MVC {
             if (null != TimeOverEvent) {
                 TimeOverEvent( );
             }
+
+            this.ResetTimer( );
         }
 
         public void Sound ( ) {
-            Debug.Log(string.Format("GameModel->Sound (  )"));
+            Debuger.Log(string.Format("GameModel->Sound (  )"));
             OnSound( );
         }
 
@@ -108,7 +105,7 @@ namespace SocialPoint.Examples.MVC {
         }
 
         public void LevelOfDifficulty ( ) {
-            Debug.Log(string.Format("GameModel->LevelOfDifficulty (  )"));
+            Debuger.Log(string.Format("GameModel->LevelOfDifficulty (  )"));
             OnLevelOfDifficulty( );
         }
 
@@ -118,6 +115,22 @@ namespace SocialPoint.Examples.MVC {
                 LevelOfDifficultyEvent( );
             }
         }
+
+        #endregion about event
+
+        public int GameTime { get; private set; }
+
+        void InitTimer ( ) { 
+       
+        }
+
+        void ResetTimer(){
+        
+        }
+
+        void StartTimer ( ) { }
+
+        void PauseTimer ( ) { }
 
     }
 }

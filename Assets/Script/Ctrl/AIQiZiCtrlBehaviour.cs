@@ -58,7 +58,7 @@ public class AIQiZiCtrlBehaviour : MonoBehaviour {
                 // 如果该检测球上有棋子，则移动棋子到该次下棋的终点的检测球位置
                 if (indexTriger.HasQiZi) {
                     Debug.Log(string.Format("AI下棋，将棋子从256数组下标{0}移到下标{1}", aIMoveEvent.from, aIMoveEvent.to));
-                    Util.moveTo(indexTriger.QiZiGameObject, IndexCtrlBehaviour.instance.getIndexSphereGo(aIMoveEvent.to).GetComponent<Transform>( ).localPosition, m_moveTime);
+                    TweenUtil.moveTo(indexTriger.QiZiGameObject, IndexCtrlBehaviour.instance.getIndexSphereGo(aIMoveEvent.to).GetComponent<Transform>( ).localPosition, m_moveTime);
                 }
             } else {
                 Debug.LogError("indexTriger is null !!");

@@ -38,17 +38,14 @@ public class IndexCtrlBehaviour : MonoSingleton<IndexCtrlBehaviour> {
 	      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 	    };
 
-    /// <summary>
-    /// 所有的下标检测球
-    /// </summary>
-    List<GameObject> m_indexSpheres = new List<GameObject>( );
+    
     /// <summary>
     /// 选中的棋子在哪个格子
     /// </summary>
     public static byte s_xzgz;
 
     /// <summary>
-    /// 【棋盘表示256一维数组下标——下标检测球GameObject】
+    /// 【棋盘表示256一维数组下标——下标检测球GameObject】，所有的下标检测球GameObject都加入其中
     /// </summary>
     private Dictionary<int, GameObject> m_hashIndex256QiZiPos = new Dictionary<int, GameObject>( );
 
@@ -85,9 +82,7 @@ public class IndexCtrlBehaviour : MonoSingleton<IndexCtrlBehaviour> {
                 // 将该下标检测球GameObject加到HASH中去，方便AI移动棋子等操作快速找到位置。
                 m_hashIndex256QiZiPos.Add(index256, go);
 
-                go.SetActive(true);
-                // 加入到下标检测球列表中去
-                m_indexSpheres.Add(go);
+                go.SetActive(true);               
                 pos.x += m_offsetX;
                 column++;
             }

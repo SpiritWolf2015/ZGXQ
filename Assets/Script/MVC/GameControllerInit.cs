@@ -3,7 +3,7 @@ using System.Collections;
 
 
 namespace SocialPoint.Examples.MVC {
-    public class WindowInit : MonoBehaviour {
+    public class GameControllerInit : MonoBehaviour {
 
         public string m_windowName = "window";
         void Start ( ) {

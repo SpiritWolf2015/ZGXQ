@@ -7,9 +7,9 @@ using com.gzc.ThreadLockEvent;
 namespace com.gzc.zgxq.view {
 
     /// <summary>
-    /// 游戏界面View
+    /// 电脑下棋AI
     /// </summary>
-    public class GameView {
+    public class ChessAiModel {
 
         /// <summary>
         /// 下棋方标志位，false为黑方下棋
@@ -54,13 +54,13 @@ namespace com.gzc.zgxq.view {
         /// <summary>
         /// 构造函数
         /// </summary>
-        public GameView ( ) {
+        public ChessAiModel ( ) {
             // 按钮，开始或者暂停
             ViewConstant.isnoStart = false;
             // 难度数
             length = ViewConstant.nanduXS * 4;
             // 初始化棋盘所有棋子
-            GameLogic.Startup( );
+            AiMoveSearch.Startup( );
             // 初始化数组
             initArrays( );
 
@@ -76,19 +76,16 @@ namespace com.gzc.zgxq.view {
         // 初始化数组
         void initArrays ( ) {
             for ( int i = 0; i < 256; i++ ) {
-                ucpcSquares[i] = GameLogic.ucpcSquares[i];
+                ucpcSquares[i] = AiMoveSearch.ucpcSquares[i];
             }
         }
 
         void surfaceCreated ( ) {
-            Debuger.Log("GameView surfaceCreated !!");
-            draw( );
             // 新启动一个线程
             newThread( );
         }
         public void surfaceDestroyed ( ) {
-            threadFlag = false;
-            //ThreadManager.Instance.removeWorkThread(thread);            
+            threadFlag = false;        
         }
 
         void draw ( ) {
@@ -113,14 +110,14 @@ namespace com.gzc.zgxq.view {
                         // 如果电脑正在下棋，时间多了，则为电脑输了
                         if ( !cMfleg ) {
                             ViewConstant.yingJMflag = true;
-                            GameLogic.Startup( );// 初始化棋盘
+                            AiMoveSearch.Startup( );// 初始化棋盘
                             initArrays( );// 初始化数组
                             ViewConstant.endTime = ViewConstant.zTime;
                             ViewConstant.isnoStart = false;
                             dianjiJDT = false;
                         } else {// 则为自己输了
                             ViewConstant.shuJMflag = true;
-                            GameLogic.Startup( );// 初始化棋盘
+                            AiMoveSearch.Startup( );// 初始化棋盘
                             initArrays( );// 初始化数组
                             ViewConstant.endTime = ViewConstant.zTime;
                             ViewConstant.isnoStart = false;
@@ -144,9 +141,13 @@ namespace com.gzc.zgxq.view {
             }
         }
 
-        public bool onTouchEvent ( ) {
-            Debuger.LogWarning("GameView onTouchEvent函数！");
-            Debuger.LogWarning("GameView onTouchEvent函数cMfleg = " + cMfleg);
+        void initAI ( ) {
+            AiMoveSearch.Startup( );// 初始化棋盘
+            initArrays( );// 初始化数组
+        }
+
+        public bool AiOnceMove ( ) {
+        
             // 如果正在进行电脑下棋
             if ( !cMfleg ) {
                 return false;
@@ -166,10 +167,10 @@ namespace com.gzc.zgxq.view {
                 draw( );// 重绘方法
 
                 // 电脑走棋
-                GameLogic.SearchMain( );
+                AiMoveSearch.SearchMain( );
 
-                int sqSrc = Chess_LoadUtil.SRC(GameLogic.mvResult);	// 得到起始位置的数组下标
-                int sqDst = Chess_LoadUtil.DST(GameLogic.mvResult); // 得到目标位置的数组下标
+                int sqSrc = Chess_LoadUtil.SRC(AiMoveSearch.mvResult);	// 得到起始位置的数组下标
+                int sqDst = Chess_LoadUtil.DST(AiMoveSearch.mvResult); // 得到目标位置的数组下标
                 int pcCaptured = ucpcSquares[sqDst];// 得到目的格子的棋子
                 Debuger.LogWarning(string.Format("GameView onTouchEvent函数，走法起点={0}，走法终点={1}, 得到目的格子的棋子={2}", sqSrc, sqDst, pcCaptured));
 
@@ -182,17 +183,17 @@ namespace com.gzc.zgxq.view {
                 EventDispatcher.Instance( ).DispatchEvent(AIMoveEvent.AI_MOVE_EVNET, aIMoveEvent);
                 Debuger.Log("GameView onTouchEvent函数->派发事件，AI移动棋子事件");
 
-                GameLogic.MakeMove(GameLogic.mvResult, 0);
+                AiMoveSearch.MakeMove(AiMoveSearch.mvResult, 0);
 
-                StackPlayChess stackplayChess = new StackPlayChess(GameLogic.mvResult, pcCaptured);
+                StackPlayChess stackplayChess = new StackPlayChess(AiMoveSearch.mvResult, pcCaptured);
                 // 下棋步骤入栈
                 stack.Push(stackplayChess);
 
                 initArrays( );// 数组操作
 
                 // 如果电脑赢了
-                if ( GameLogic.IsMate( ) ) {
-                    GameLogic.Startup( );// 初始化棋盘
+                if ( AiMoveSearch.IsMate( ) ) {
+                    AiMoveSearch.Startup( );// 初始化棋盘
                     initArrays( );// 初始化数组
                     ViewConstant.shuJMflag = true;
                     //father.playSound(5, 1);// b播放声音,输了
@@ -212,7 +213,21 @@ namespace com.gzc.zgxq.view {
             ThreadManager.Instance.addWorkThread(aiThread);
 
             return true;
-        }        
+        }
+
+        public event Action AiMoveEvent;
+        public void AiMove ( ) {
+            OnAiMove( );
+        }
+        protected virtual void OnAiMove ( ) {
+            AiOnceMove( );
+
+            if (null != AiMoveEvent) {
+                AiMoveEvent( );
+            }
+        }
+
+
     }
 
 }

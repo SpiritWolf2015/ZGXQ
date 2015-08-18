@@ -1,28 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 using com.gzc.zgxq.view;
+using SocialPoint.Examples.MVC;
+using com.gzc.ThreadLockEvent;
 
 namespace com.gzc.zgxq {
 
     /// <summary>
     /// 游戏的控制器
     /// </summary>
-    public class GameManagerBehaviour : MonoSingleton<GameManagerBehaviour> {
+    public class GameManagerBehaviour : MonoBehaviour {
 
         /// <summary>
         /// 游戏界面View
         /// </summary>
-        GameView gameView;
-
+        ChessAiModel gameView;
         //声音处理
         //SoundPool soundPool;
+
+        GameObject m_selfGo;
 
 
         #region U3D API
 
         void Start ( ) {
-            // 进入游戏界面界面
-            this.goToGameView( );
+            initValue( );
+            initAssetBundle( );            
+            initWindow( );
+            initThreadLockEvent( );
         }
 
         void OnDestroy ( ) {
@@ -35,11 +40,18 @@ namespace com.gzc.zgxq {
 
         #endregion U3D API
 
-        // 进入游戏界面界面
-        void goToGameView ( ) {
-            gameView = new GameView( );
-            gameView.onTouchEvent( );
-            Debuger.Log(this + ", goToGameView");
+        void initValue ( ) {
+            m_selfGo = this.gameObject;
+        }
+
+        void initAssetBundle ( ) { }
+
+        void initWindow ( ) {
+            m_selfGo.AddComponent<GameControllerInit>( );
+        }
+
+        void initThreadLockEvent ( ) {
+            m_selfGo.AddComponent<EventTickerBehaviour>( );
         }
 
         #region 游戏逻辑控制
