@@ -31,7 +31,7 @@ namespace com.gzc.zgxq.view {
         /// <summary>
         /// 触摸是否有效
         /// </summary>
-        bool cMfleg = true;
+        bool isValidTouch = true;
         /// <summary>
         /// 点击处为拖动
         /// </summary>
@@ -103,42 +103,39 @@ namespace com.gzc.zgxq.view {
             ThreadManager.Instance.addWorkThread(thread);
         }
         void run ( ) {
-            Debuger.Log("执行新线程！");
-            while ( threadFlag ) {
-                if ( ViewConstant.isnoStart ) {
-                    if ( ViewConstant.endTime - 500 < 0 ) {
-                        // 如果电脑正在下棋，时间多了，则为电脑输了
-                        if ( !cMfleg ) {
-                            ViewConstant.yingJMflag = true;
-                            AiMoveSearch.Startup( );// 初始化棋盘
-                            initArrays( );// 初始化数组
-                            ViewConstant.endTime = ViewConstant.zTime;
-                            ViewConstant.isnoStart = false;
-                            dianjiJDT = false;
-                        } else {// 则为自己输了
-                            ViewConstant.shuJMflag = true;
-                            AiMoveSearch.Startup( );// 初始化棋盘
-                            initArrays( );// 初始化数组
-                            ViewConstant.endTime = ViewConstant.zTime;
-                            ViewConstant.isnoStart = false;
-                            dianjiJDT = false;
-                        }
+            if (ViewConstant.isnoStart) {
+                if (ViewConstant.endTime - 500 < 0) {
+                    // 如果电脑正在下棋，时间多了，则为电脑输了
+                    if (!isValidTouch) {
+                        aiLose( );
                     } else {
-                        // 游戏正常进行，一直计时
-                        ViewConstant.endTime -= 500;
+                        // 玩家输了，AI胜利
+                        aiWin( );
                     }
-
-                    this.draw( );
-                    try {
-                        Thread.Sleep(500);
-                    } catch ( Exception e ) {
-                        Debuger.Log("e.Message = " + e.Message);
-                        Debuger.Log("e.Source = " + e.Source);
-                        this.surfaceDestroyed( );
-                        break;
-                    }
+                } else {
+                    // 游戏正常进行，一直计时
+                    ViewConstant.endTime -= 500;
                 }
-            }
+            }            
+        }
+
+        // 玩家胜利，AI失败
+        void aiLose ( ) {
+            ViewConstant.yingJMflag = true;
+            AiMoveSearch.Startup( );// 初始化棋盘
+            initArrays( );// 初始化数组
+            ViewConstant.endTime = ViewConstant.zTime;
+            ViewConstant.isnoStart = false;
+            dianjiJDT = false;
+        }
+        // 玩家输了，AI胜利
+        void aiWin ( ) {
+            ViewConstant.shuJMflag = true;
+            AiMoveSearch.Startup( );// 初始化棋盘
+            initArrays( );// 初始化数组
+            ViewConstant.endTime = ViewConstant.zTime;
+            ViewConstant.isnoStart = false;
+            dianjiJDT = false;
         }
 
         void initAI ( ) {
@@ -146,11 +143,11 @@ namespace com.gzc.zgxq.view {
             initArrays( );// 初始化数组
         }
 
-        public bool AiOnceMove ( ) {
+        public void AiOnceMove ( ) {
         
             // 如果正在进行电脑下棋
-            if ( !cMfleg ) {
-                return false;
+            if ( !isValidTouch ) {
+                return;
             }
 
             //...省略Android前面的代码
@@ -162,7 +159,7 @@ namespace com.gzc.zgxq.view {
                 ViewConstant.endTime = ViewConstant.zTime;// 时间初始化
 
                 isRedPlayChess = true;// 正在下棋
-                cMfleg = false;// 正在下棋标志
+                isValidTouch = false;// 正在下棋标志
 
                 draw( );// 重绘方法
 
@@ -199,7 +196,7 @@ namespace com.gzc.zgxq.view {
                     //father.playSound(5, 1);// b播放声音,输了
                 } else {
                     //father.playSound(2, 1);// b播放声音,电脑下棋了
-                    cMfleg = true;// 下完棋子，玩家可以操控了。
+                    isValidTouch = true;// 下完棋子，玩家可以操控了。
                 }
                     
                 isRedPlayChess = false;
@@ -211,8 +208,6 @@ namespace com.gzc.zgxq.view {
             //aiThread.IsBackground = true;
             // 加入线程管理，并启动线程
             ThreadManager.Instance.addWorkThread(aiThread);
-
-            return true;
         }
 
         public event Action AiMoveEvent;

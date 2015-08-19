@@ -29,12 +29,12 @@ public class IndexTrigerBehaviour : MonoBehaviour {
     /// <summary>
     /// 该检查球这有棋子
     /// </summary>
-    public bool m_hasQiZi;
+    private bool m_hasQiZi;
     public bool HasQiZi { get { return m_hasQiZi; } }
     /// <summary>
     /// 该检查球上的棋子
     /// </summary>
-    public GameObject m_qiZiGameObject;
+    private GameObject m_qiZiGameObject;
     public GameObject QiZiGameObject { get { return m_qiZiGameObject; } }
 
 

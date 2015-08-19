@@ -23,18 +23,22 @@ public class DragQiZiBehaviour : MonoBehaviour {
         EasyTouch.On_DragStart += On_DragStart;
         EasyTouch.On_DragEnd += On_DragEnd;
     }
+
     void OnDisable ( ) {
         // 移除事件处理
         UnsubscribeEvent( );
     }
+
     void Start ( ) {
         m_selfTransform = this.transform;
         m_selfGameObject = this.gameObject;
     }
+
     void OnDestroy ( ) {      
         // 移除事件处理
         UnsubscribeEvent( );
     }
+
     // 移除事件处理
     void UnsubscribeEvent ( ) {
         EasyTouch.On_Drag -= On_Drag;

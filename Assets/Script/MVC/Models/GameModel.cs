@@ -8,7 +8,7 @@ namespace SocialPoint.Examples.MVC {
 
         // Use this for initialization
         public GameModel ( ) {
-            this.ResetTimer( );
+        
         }
 
         #region about event
@@ -89,8 +89,6 @@ namespace SocialPoint.Examples.MVC {
             if (null != TimeOverEvent) {
                 TimeOverEvent( );
             }
-
-            this.ResetTimer( );
         }
 
         public void Sound ( ) {
@@ -118,19 +116,6 @@ namespace SocialPoint.Examples.MVC {
 
         #endregion about event
 
-        public int GameTime { get; private set; }
-
-        void InitTimer ( ) { 
-       
-        }
-
-        void ResetTimer(){
-        
-        }
-
-        void StartTimer ( ) { }
-
-        void PauseTimer ( ) { }
 
     }
 }

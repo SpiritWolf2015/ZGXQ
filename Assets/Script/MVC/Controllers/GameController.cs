@@ -8,19 +8,20 @@ namespace SocialPoint.Examples.MVC {
 
     public class GameController {
 
-        /// <summary>
-        /// 游戏界面View
-        /// </summary>
-        ChessAiModel m_ai;
+       
+        ChessAiModel m_ai { get; set; }
+        PlayerModel m_player { get; set; }
 
         GameModel m_gameModel { get; set; }
         UguiWindowViewPresenter m_windowViewPresenter { get; set; }
+        //玩家走棋检测球VIEW
 
         public GameController (string windowName) {
             InitGameModel( );
             InitView(windowName);
 
             InitAiModel( );
+            InitPlayerModel( );
         }
 
         void InitGameModel ( ) {
@@ -28,12 +29,14 @@ namespace SocialPoint.Examples.MVC {
             m_gameModel = new GameModel( );
             // model event
             m_gameModel.NewGameEvent += ( ) => { 
-                Debug.Log("NewGame业务逻辑");
-
-                InitAiModel( );
+                Debug.Log("NewGame业务逻辑");            
             };
             m_gameModel.StartGameEvent += ( ) => {
                 Debug.Log("StartGame业务逻辑");
+                //响应玩家的输入
+                
+                //开始计数器
+                //AI下棋
             };
             m_gameModel.PauseGameEvent += ( ) => { 
                 Debug.Log("PauseGame业务逻辑"); 
@@ -75,7 +78,18 @@ namespace SocialPoint.Examples.MVC {
         // 进入游戏界面界面
         void InitAiModel ( ) {
             m_ai = new ChessAiModel( );
-            //m_ai.AiOnceMove( );
+            //  电脑走一步棋后，回调让玩家走一步棋
+            m_ai.AiMoveEvent += ( ) => {
+                m_player.SwitchPlayChess( );
+            };
+        }
+
+        void InitPlayerModel ( ) {
+            m_player = new PlayerModel( );
+            //  玩家走一步棋后，回调让电脑走一步棋
+            m_player.PlayerOnceMoveFinishEvent += ( ) => {
+                m_ai.AiOnceMove( );
+            };
         }
 
     }

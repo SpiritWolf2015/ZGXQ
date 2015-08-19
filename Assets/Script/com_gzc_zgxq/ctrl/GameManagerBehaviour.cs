@@ -25,8 +25,8 @@ namespace com.gzc.zgxq {
 
         void Start ( ) {
             initValue( );
-            initAssetBundle( );            
-            initWindow( );
+            initAssetBundle( );
+            initGameController( );
             initThreadLockEvent( );
         }
 
@@ -46,33 +46,13 @@ namespace com.gzc.zgxq {
 
         void initAssetBundle ( ) { }
 
-        void initWindow ( ) {
+        void initGameController ( ) {
             m_selfGo.AddComponent<GameControllerInit>( );
         }
 
         void initThreadLockEvent ( ) {
             m_selfGo.AddComponent<EventTickerBehaviour>( );
         }
-
-        #region 游戏逻辑控制
-
-        void onNewGame ( ) { }
-
-        void onStartGame ( ) { }
-
-        void onPauseGame ( ) { }
-
-        // 悔棋
-        void onUndo ( ) { }
-
-        void onTimeOver ( ) { }
-
-        void onSound ( ) { }
-
-        // 难度等级
-        void onLevelOfDifficulty ( ) { }
-
-        #endregion 游戏逻辑控制
 
     }
 }
