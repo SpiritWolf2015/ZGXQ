@@ -4,17 +4,24 @@ using System.Collections.Generic;
 using System;
 
 namespace SocialPoint.Examples.MVC {
-    public class GoViewPresenter : BaseViewPresenter {
+    public class PlayerRootViewPresenter : BaseViewPresenter {
 
         public Transform ViewRoot { get; set; }
 
         public event EventHandler ViewDidHide;
         public event EventHandler ViewDidShow;
 
+
+        private Dictionary<string, BoxCollider> m_hashPlayerQiZis = new Dictionary<string, BoxCollider>( );
         /// <summary>
         /// 玩家（红方）控制的所有棋子
         /// </summary>
-        public Dictionary<string, GameObject> m_hashPlayerQiZis = new Dictionary<string, GameObject>( );
+        public Dictionary<string, BoxCollider> HashPlayerQiZis {
+            get {
+                return m_hashPlayerQiZis;
+            }
+        }
+
 
         #region Unity3D Messages propagation
 
@@ -22,18 +29,19 @@ namespace SocialPoint.Examples.MVC {
             // This will allow to set the view in the inspector if we want to
             ViewRoot = ViewRoot ?? GetComponent<Transform>( );
 
-            Transform[ ] childs = this.gameObject.GetComponentsInChildren<Transform>( );
-            foreach (var child in childs) {
-                m_hashPlayerQiZis.Add(child.name, child.gameObject);
-            }
+            InitValue( );
         }
         #endregion
 
         public override void Enable ( ) {
-            ViewRoot.gameObject.SetActive(true);
+            foreach (BoxCollider qizi in m_hashPlayerQiZis.Values) {
+                qizi.enabled = true;
+            }
         }
         public override void Disable ( ) {
-            ViewRoot.gameObject.SetActive(false);
+            foreach (BoxCollider qizi in m_hashPlayerQiZis.Values) {
+                qizi.enabled = false;
+            }
         }
 
         public override void Show ( ) {
@@ -41,6 +49,13 @@ namespace SocialPoint.Examples.MVC {
         }
         public override void Hide ( ) {
             ViewRoot.gameObject.SetActive(false);
+        }
+
+        void InitValue ( ) {
+            BoxCollider[ ] childs = this.gameObject.GetComponentsInChildren<BoxCollider>( );
+            foreach (var child in childs) {
+                m_hashPlayerQiZis.Add(child.name, child);
+            }
         }
 
     }

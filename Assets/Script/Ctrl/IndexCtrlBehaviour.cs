@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SocialPoint.Examples.MVC;
 
 /// <summary>
 /// 负责棋盘坐标球的生成，棋盘棋子的交互以及对棋子移动的监视

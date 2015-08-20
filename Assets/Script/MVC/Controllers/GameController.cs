@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using System.Collections;
 using System;
 using com.gzc.zgxq.view;
+using com.gzc.zgxq.game;
 
 namespace SocialPoint.Examples.MVC {
 
@@ -10,11 +11,15 @@ namespace SocialPoint.Examples.MVC {
 
        
         ChessAiModel m_ai { get; set; }
-        PlayerModel m_player { get; set; }
+        PlayerModel m_playerModel { get; set; }
 
         GameModel m_gameModel { get; set; }
+
         UguiWindowViewPresenter m_windowViewPresenter { get; set; }
+        PlayerRootViewPresenter m_playerRootViewPresenter { get; set; }
         //玩家走棋检测球VIEW
+
+
 
         public GameController (string windowName) {
             InitGameModel( );
@@ -29,17 +34,21 @@ namespace SocialPoint.Examples.MVC {
             m_gameModel = new GameModel( );
             // model event
             m_gameModel.NewGameEvent += ( ) => { 
-                Debug.Log("NewGame业务逻辑");            
+                Debuger.Log("NewGame业务逻辑");            
             };
             m_gameModel.StartGameEvent += ( ) => {
-                Debug.Log("StartGame业务逻辑");
+                Debuger.Log("StartGame业务逻辑");
                 //响应玩家的输入
-                
-                //开始计数器
+                m_playerRootViewPresenter.Enable( );
+                PlayerChessOnceMove( );
+
+                //开始计时器
                 //AI下棋
             };
-            m_gameModel.PauseGameEvent += ( ) => { 
-                Debug.Log("PauseGame业务逻辑"); 
+            m_gameModel.PauseGameEvent += ( ) => {
+                Debuger.Log("PauseGame业务逻辑");
+                //停止响应玩家的输入
+                m_playerRootViewPresenter.Disable( );
             };
         }
 
@@ -67,7 +76,10 @@ namespace SocialPoint.Examples.MVC {
                     m_windowViewPresenter.Button_StartPauseGame.Clicked -= startAction;
                     m_windowViewPresenter.Button_StartPauseGame.Clicked += pauseAction;
                 }
-            };           
+            };
+
+
+            m_playerRootViewPresenter = CreateView("Red").GetComponent<PlayerRootViewPresenter>( );
         }
 
         GameObject CreateView ( string viewName ) {
@@ -80,16 +92,28 @@ namespace SocialPoint.Examples.MVC {
             m_ai = new ChessAiModel( );
             //  电脑走一步棋后，回调让玩家走一步棋
             m_ai.AiMoveEvent += ( ) => {
-                m_player.SwitchPlayChess( );
+                m_playerModel.SwitchPlayChess( );
             };
         }
 
         void InitPlayerModel ( ) {
-            m_player = new PlayerModel( );
+            m_playerModel = new PlayerModel( );
             //  玩家走一步棋后，回调让电脑走一步棋
-            m_player.PlayerOnceMoveFinishEvent += ( ) => {
+            m_playerModel.PlayerOnceMoveFinishEvent += ( ) => {
                 m_ai.AiOnceMove( );
             };
+        }
+
+        void PlayerChessOnceMove ( ) {
+            Action<StackPlayChess> playerOnceMoveFinish = (stackPlayChess) => {
+                m_playerModel.ChessMove(stackPlayChess);
+            };
+
+            foreach (BoxCollider qiziBox in m_playerRootViewPresenter.HashPlayerQiZis.Values) {
+                GameObject qizi = qiziBox.gameObject;
+                PlayerDragViewPresenter playerDragViewPresenter = qizi.GetComponent<PlayerDragViewPresenter>( );
+                playerDragViewPresenter.ChessMoveOverEvent += playerOnceMoveFinish;
+            }
         }
 
     }
