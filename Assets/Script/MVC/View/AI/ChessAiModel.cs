@@ -204,25 +204,25 @@ namespace com.gzc.zgxq.view {
                 draw( );// 重绘方法
 
                 Debuger.LogWarning("电脑走棋线程执行完毕!!");
+                
             }));
             //aiThread.IsBackground = true;
             // 加入线程管理，并启动线程
             ThreadManager.Instance.addWorkThread(aiThread);
         }
 
-        public event Action AiMoveEvent;
-        public void AiMove ( ) {
-            OnAiMove( );
+        public event Action AiMoveFinishEvent;
+        public void AiMoveFinish ( ) {
+            OnAiMoveFinish( );
         }
-        protected virtual void OnAiMove ( ) {
-            AiOnceMove( );
+        protected virtual void OnAiMoveFinish ( ) {
+            //AiOnceMove( );
 
-            if (null != AiMoveEvent) {
-                AiMoveEvent( );
+            if (null != AiMoveFinishEvent) {
+                AiMoveFinishEvent( );
             }
         }
 
 
     }
-
 }

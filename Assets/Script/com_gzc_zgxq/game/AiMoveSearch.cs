@@ -63,7 +63,7 @@ namespace com.gzc.zgxq.game {
             }
             for ( sq = 0; sq < 256; sq++ ) {
                 // 根据初始棋子位置数组，在棋盘上放棋子，for循环结束，棋盘上所有棋子也就按初始位置摆好了
-                pc = Constant.cucpcStartup[sq];
+                pc = GameConstant.cucpcStartup[sq];
                 if ( pc != 0 ) {
                     // 如初始游戏时，sq=52(黑方左边的车), cucpcStartup[sq]为20, pc=cucpcStartup[sq]此时pc=20
                     // 黑方加分，cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)]为cucvlPiecePos[4][202]=206，为黑方子力价值加206分
@@ -79,7 +79,7 @@ namespace com.gzc.zgxq.game {
         /// 迭代加深搜索过程，该方法从0到最大搜索深度进行搜索。
         /// </summary>
         public static void SearchMain ( ) {
-            Debuger.Log("Loadutil->SearchMain( ) 开始");
+            //Debuger.Log("Loadutil->SearchMain( ) 开始");
 
             int i, vl;
             i = vl = 0;
@@ -93,11 +93,11 @@ namespace com.gzc.zgxq.game {
             Debuger.Log("Loadutil->SearchMain( ) 开始搜索计时: " + tsBegin.ToString());
 
             // 迭代加深过程
-            for ( i = 1; i <= Constant.LIMIT_DEPTH; i++ ) {
+            for ( i = 1; i <= GameConstant.LIMIT_DEPTH; i++ ) {
                 // Alpha-Beta搜索
-                vl = SearchFull(-Constant.MATE_VALUE, Constant.MATE_VALUE, i);
+                vl = SearchFull(-GameConstant.MATE_VALUE, GameConstant.MATE_VALUE, i);
                 // 搜索到杀棋，就终止搜索
-                if ( vl > Constant.WIN_VALUE || vl < -Constant.WIN_VALUE ) {
+                if ( vl > GameConstant.WIN_VALUE || vl < -GameConstant.WIN_VALUE ) {
                     break;
                 }
                 // 搜索计时
@@ -112,7 +112,7 @@ namespace com.gzc.zgxq.game {
                 }
             }
 
-            Debuger.Log("GameLogic->SearchMain( ) 结束");
+            //Debuger.Log("GameLogic->SearchMain( ) 结束");
         }
 
         private static List<int> s_sortTempList = new List<int>( );
@@ -128,13 +128,13 @@ namespace com.gzc.zgxq.game {
         /// <param name="nDepth"></param>
         /// <returns></returns>
         private static int SearchFull ( int vlAlpha, int vlBeta, int nDepth ) {
-            Debuger.LogWarning("Loadutil->SearchFull( ) 开始");
+            //Debuger.LogWarning("Loadutil->SearchFull( ) 开始");
 
             int i = 0, nGenMoves = 0, pcCaptured = 0;
             int vl, vlBest, mvBest;
             vl = vlBest = mvBest = 0;
             // 每一层生成的所有走法
-            int[ ] moves = new int[Constant.MAX_GEN_MOVES];
+            int[ ] moves = new int[GameConstant.MAX_GEN_MOVES];
 
             // 一个Alpha-Beta完全搜索分为以下6个阶段:
 
@@ -147,7 +147,7 @@ namespace com.gzc.zgxq.game {
             }
 
             // 2. 初始化最佳值和最佳走法
-            vlBest = -Constant.MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
+            vlBest = -GameConstant.MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
             mvBest = 0; // 这样可以知道，是否搜索到了Beta走法或PV走法，以便保存到历史表
 
             // 3. 生成全部走法，并根据历史表排序
@@ -163,7 +163,7 @@ namespace com.gzc.zgxq.game {
             // 其值为在该步骤下的深度值，所以，每次搜索时就可以先搜索最好的走法。减少对后面的搜索次数。
             s_sortTempList.Sort(( index1, index2 ) => {
                 int value = AiMoveSearch.nHistoryTable[index2] - AiMoveSearch.nHistoryTable[index1];
-                Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 历史表排序={0}", value));
+                //Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 历史表排序={0}", value));
                 return value;
             });           
             //s_list.CopyTo(mvs); 
@@ -181,12 +181,12 @@ namespace com.gzc.zgxq.game {
             // 4. 逐一走这些走法，并进行递归
             for ( i = 0; i < nGenMoves; i++ ) {
                 pcCaptured = ucpcSquares[Chess_LoadUtil.DST(moves[i])];
-                Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 第 {0} 个走法, moves[{1}] = {2}, pcCaptured={3}", (i + 1), i, moves[i], pcCaptured));
+                //Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 第 {0} 个走法, moves[{1}] = {2}, pcCaptured={3}", (i + 1), i, moves[i], pcCaptured));
 
                 if ( MakeMove(moves[i], pcCaptured) ) {
                     // 递归
                     vl = -SearchFull(-vlBeta, -vlAlpha, nDepth - 1);
-                    Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 递归vl={0}", vl));
+                    //Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 递归vl={0}", vl));
                     UndoMakeMove(moves[i], pcCaptured);
 
                     // 5. 进行Alpha-Beta大小判断和截断
@@ -203,12 +203,12 @@ namespace com.gzc.zgxq.game {
                     }
                 }
             }
-            Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 遍历所有走法完成!!"));
+            //Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 遍历所有走法完成!!"));
 
             // 6. 所有走法都搜索完了，把最佳走法(不能是Alpha走法)保存到历史表，返回最佳值
-            if ( vlBest == -Constant.MATE_VALUE ) {
-                int value = nDistance - Constant.MATE_VALUE;
-                Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 如果是杀棋，就根据杀棋步数给出评价={0}" + value));
+            if ( vlBest == -GameConstant.MATE_VALUE ) {
+                int value = nDistance - GameConstant.MATE_VALUE;
+                //Debuger.LogWarning(string.Format("Loadutil->SearchFull( ) 如果是杀棋，就根据杀棋步数给出评价={0}" + value));
                 // 如果是杀棋，就根据杀棋步数给出评价
                 return value;
             }
@@ -221,7 +221,7 @@ namespace com.gzc.zgxq.game {
                 }
             }
 
-            Debuger.LogWarning("Loadutil->SearchFull( ) over, vlBest = " + vlBest);
+            //Debuger.LogWarning("Loadutil->SearchFull( ) over, vlBest = " + vlBest);
             return vlBest;
         }
 
@@ -241,8 +241,8 @@ namespace com.gzc.zgxq.game {
         /// 先将该棋子搬到初始位置，如果该步骤下的目标位置上的棋子不为空，即： 是吃子走法时，
         /// 把被吃掉的棋子重新搬到该位置，以此来实现撤销搬一步棋的功能。
         /// </summary>
-        /// <param name="mv"></param>
-        /// <param name="pcCaptured"></param>
+        /// <param name="mv">走棋步骤</param>
+        /// <param name="pcCaptured">原来目标格子上的棋子</param>
         public static void UndoMovePiece ( int mv, int pcCaptured ) {
             int sqSrc, sqDst, pc;
             sqSrc = Chess_LoadUtil.SRC(mv);	// 得到起始位置的数组下标
@@ -266,19 +266,18 @@ namespace com.gzc.zgxq.game {
         /// <returns></returns>
         public static bool MakeMove ( int mv, int pcCaptured ) {
             pcCaptured = MovePiece(mv);
-            Debuger.LogWarning(string.Format("GameLogic->MakeMove( )开始"));
+            //Debuger.LogWarning(string.Format("GameLogic->MakeMove( )开始"));
 
             if ( Checked( ) ) {
                 UndoMovePiece(mv, pcCaptured);
-                Debuger.LogWarning(string.Format("GameLogic->MakeMove( ) false"));
+                //Debuger.LogWarning(string.Format("GameLogic->MakeMove( ) false"));
                 return false;
             }
             ChangeSide( );
             nDistance++;
-            Debuger.LogWarning(string.Format("GameLogic->MakeMove( ) true"));
+            //Debuger.LogWarning(string.Format("GameLogic->MakeMove( ) true"));
             return true;
         }
-
 
         /// <summary>
         /// 搬一步棋的棋子
@@ -286,8 +285,7 @@ namespace com.gzc.zgxq.game {
         /// <param name="mv">走棋步骤</param>
         /// <returns>返回原来目标格子上的棋子</returns>
         public static int MovePiece ( int mv ) {
-            Debuger.LogWarning(string.Format("Loadutil->MovePiece( ) 开始, mv = {0}", mv));
-
+            //Debuger.LogWarning(string.Format("Loadutil->MovePiece( ) 开始, mv = {0}", mv));
             int sqSrc, sqDst, pc, pcCaptured;
 
             sqSrc = Chess_LoadUtil.SRC(mv);	// 得到起始位置的数组下标
@@ -312,30 +310,24 @@ namespace com.gzc.zgxq.game {
             return pcCaptured;// 返回原来目标格子上的棋子
         }
 
-
         /// <summary>
         /// 在棋盘上放一枚棋子
         /// </summary>
         /// <param name="sq">位置下标</param>
         /// <param name="pc">哪颗棋子代号</param>
-        public static void AddPiece ( int sq, int pc ) {
-            Debuger.LogWarning(string.Format("Loadutil->AddPiece( ) 开始"));
-            //try {
-                ucpcSquares[sq] = pc;
-                Debuger.LogWarning(string.Format("Loadutil->AddPiece( ) sq = {0}, pc = {1}", sq, pc));
+        public static void AddPiece ( int sq, int pc ) {           
+            ucpcSquares[sq] = pc;
+            Debuger.LogWarning(string.Format("Loadutil->AddPiece( ) sq = {0}, pc = {1}", sq, pc));
 
-                // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
-                // 小于16是红方棋子，大于16为黑方棋子，0表示没棋子
-                if ( pc < 16 ) {
-                    vlWhite += Constant.cucvlPiecePos[pc - 8][sq];
-                    Debuger.LogWarning(string.Format("Loadutil->AddPiece( ) vlWhite = {0}", vlWhite));
-                } else {
-                    vlBlack += Constant.cucvlPiecePos[pc - 16][Chess_LoadUtil.SQUARE_FLIP(sq)];
-                    Debuger.LogWarning(string.Format("Loadutil->AddPiece( ) vlBlack = {0}", vlBlack));
-                }
-            //} catch ( IndexOutOfRangeException e ) {
-            //    Debuger.LogError(string.Format("LoadUtil->AddPiece()异常：Message={0}, Source={1}, StackTrace={2}, TargetSite={3}", e.Message, e.Source, e.StackTrace, e.TargetSite));
-            //}
+            // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
+            // 小于16是红方棋子，大于16为黑方棋子，0表示没棋子
+            if ( pc < 16 ) {
+                vlWhite += GameConstant.cucvlPiecePos[pc - 8][sq];
+                Debuger.LogWarning(string.Format("Loadutil->AddPiece( ) vlWhite = {0}", vlWhite));
+            } else {
+                vlBlack += GameConstant.cucvlPiecePos[pc - 16][Chess_LoadUtil.SQUARE_FLIP(sq)];
+                Debuger.LogWarning(string.Format("Loadutil->AddPiece( ) vlBlack = {0}", vlBlack));
+            }
         }
 
         /// <summary>
@@ -344,21 +336,16 @@ namespace com.gzc.zgxq.game {
         /// <param name="sq">位置下标</param>
         /// <param name="pc">哪颗棋子</param>
         public static void DelPiece ( int sq, int pc ) {
-            Debuger.LogWarning(string.Format("GameLogic->DelPiece() sq = {0}, pc = {1}", sq, pc));
-
+            //Debuger.LogWarning(string.Format("GameLogic->DelPiece() sq = {0}, pc = {1}", sq, pc));
             ucpcSquares[sq] = 0;
-            //try {
-                // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
-                if ( pc < 16 ) {
-                    vlWhite -= Constant.cucvlPiecePos[pc - 8][sq];
-                } else {
-                    vlBlack -= Constant.cucvlPiecePos[pc - 16][Chess_LoadUtil.SQUARE_FLIP(sq)];
-                }
 
-                Debuger.LogWarning(string.Format("GameLogic->DelPiece()完成 vlWhite = {0}, vlBlack = {1}", vlWhite, vlBlack));
-            //} catch ( IndexOutOfRangeException e ) {
-            //    Debuger.LogError(string.Format("LoadUtil->DelPiece()异常：Message={0}, Source={1}, StackTrace={2}, TargetSite={3}", e.Message, e.Source, e.StackTrace, e.TargetSite));
-            //}          
+            // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
+            if ( pc < 16 ) {
+                vlWhite -= GameConstant.cucvlPiecePos[pc - 8][sq];
+            } else {
+                vlBlack -= GameConstant.cucvlPiecePos[pc - 16][Chess_LoadUtil.SQUARE_FLIP(sq)];
+            }
+            Debuger.LogWarning(string.Format("GameLogic->DelPiece()完成 vlWhite = {0}, vlBlack = {1}", vlWhite, vlBlack));
         }
 
         /// <summary>
@@ -385,24 +372,24 @@ namespace com.gzc.zgxq.game {
                 // 2. 根据棋子确定走法
                 switch ( pcSrc - pcSelfSide ) {
                     // 帅(将)
-                    case Constant.PIECE_KING:
+                    case GameConstant.PIECE_KING:
                         for ( i = 0; i < 4; i++ ) {
-                            sqDst = sqSrc + Constant.ccKingDelta[i];
+                            sqDst = sqSrc + GameConstant.ccKingDelta[i];
                             if ( !Chess_LoadUtil.IN_FORT(sqDst) ) {
                                 continue;
                             }
                             pcDst = ucpcSquares[sqDst];
                             if ( (pcDst & pcSelfSide) == 0 ) {
                                 mvs[nGenMoves] = Chess_LoadUtil.MOVE(sqSrc, sqDst);// 根据起点和终点获得走法
-                                Debuger.LogWarning(string.Format("GameLogic->GenerateMoves(),帅(将)moves[{0}] = {1}", nGenMoves, mvs[nGenMoves]));
+                                //Debuger.LogWarning(string.Format("GameLogic->GenerateMoves(),帅(将)moves[{0}] = {1}", nGenMoves, mvs[nGenMoves]));
                                 nGenMoves++;
                             }
                         }
                         break;
                     // 士
-                    case Constant.PIECE_ADVISOR:
+                    case GameConstant.PIECE_ADVISOR:
                         for ( i = 0; i < 4; i++ ) {
-                            sqDst = sqSrc + Constant.ccAdvisorDelta[i];
+                            sqDst = sqSrc + GameConstant.ccAdvisorDelta[i];
                             if ( !Chess_LoadUtil.IN_FORT(sqDst) ) {
                                 continue;
                             }
@@ -413,14 +400,14 @@ namespace com.gzc.zgxq.game {
                             }
                         }
                         break;
-                    //小兵
-                    case Constant.PIECE_BISHOP:
+                    // 象
+                    case GameConstant.PIECE_BISHOP:
                         for ( i = 0; i < 4; i++ ) {
-                            sqDst = sqSrc + Constant.ccAdvisorDelta[i];
+                            sqDst = sqSrc + GameConstant.ccAdvisorDelta[i];
                             if ( !(Chess_LoadUtil.IN_BOARD(sqDst) && Chess_LoadUtil.HOME_HALF(sqDst, sdPlayer) && ucpcSquares[sqDst] == 0) ) {
                                 continue;
                             }
-                            sqDst += Constant.ccAdvisorDelta[i];
+                            sqDst += GameConstant.ccAdvisorDelta[i];
                             pcDst = ucpcSquares[sqDst];
                             if ( (pcDst & pcSelfSide) == 0 ) {
                                 mvs[nGenMoves] = Chess_LoadUtil.MOVE(sqSrc, sqDst);
@@ -428,14 +415,15 @@ namespace com.gzc.zgxq.game {
                             }
                         }
                         break;
-                    case Constant.PIECE_KNIGHT:
+                        //马
+                    case GameConstant.PIECE_KNIGHT:
                         for ( i = 0; i < 4; i++ ) {
-                            sqDst = sqSrc + Constant.ccKingDelta[i];
+                            sqDst = sqSrc + GameConstant.ccKingDelta[i];
                             if ( ucpcSquares[sqDst] != 0 ) {
                                 continue;
                             }
                             for ( j = 0; j < 2; j++ ) {
-                                sqDst = sqSrc + Constant.ccKnightDelta[i][j];
+                                sqDst = sqSrc + GameConstant.ccKnightDelta[i][j];
                                 if ( !Chess_LoadUtil.IN_BOARD(sqDst) ) {
                                     continue;
                                 }
@@ -447,9 +435,10 @@ namespace com.gzc.zgxq.game {
                             }
                         }
                         break;
-                    case Constant.PIECE_ROOK:
+                        // 车
+                    case GameConstant.PIECE_ROOK:
                         for ( i = 0; i < 4; i++ ) {
-                            nDelta = Constant.ccKingDelta[i];
+                            nDelta = GameConstant.ccKingDelta[i];
                             sqDst = sqSrc + nDelta;
                             while ( Chess_LoadUtil.IN_BOARD(sqDst) ) {
                                 pcDst = ucpcSquares[sqDst];
@@ -467,9 +456,10 @@ namespace com.gzc.zgxq.game {
                             }
                         }
                         break;
-                    case Constant.PIECE_CANNON:
+                        // 炮
+                    case GameConstant.PIECE_CANNON:
                         for ( i = 0; i < 4; i++ ) {
-                            nDelta = Constant.ccKingDelta[i];
+                            nDelta = GameConstant.ccKingDelta[i];
                             sqDst = sqSrc + nDelta;
                             while ( Chess_LoadUtil.IN_BOARD(sqDst) ) {
                                 pcDst = ucpcSquares[sqDst];
@@ -495,7 +485,8 @@ namespace com.gzc.zgxq.game {
                             }
                         }
                         break;
-                    case Constant.PIECE_PAWN:
+                        //小兵
+                    case GameConstant.PIECE_PAWN:
                         sqDst = Chess_LoadUtil.SQUARE_FORWARD(sqSrc, sdPlayer);// 格子水平镜像
                         if ( Chess_LoadUtil.IN_BOARD(sqDst) ) {// 判断棋子是否在棋盘中
                             pcDst = ucpcSquares[sqDst];
@@ -528,7 +519,7 @@ namespace com.gzc.zgxq.game {
         /// </summary>
         /// <returns></returns>
         public static int Evaluate ( ) {
-            return (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + Constant.ADVANCED_VALUE;
+            return (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + GameConstant.ADVANCED_VALUE;
         }
 
 
@@ -546,29 +537,29 @@ namespace com.gzc.zgxq.game {
             // 找到棋盘上的帅(将)，再做以下判断：
 
             for ( sqSrc = 0; sqSrc < 256; sqSrc++ ) {
-                if ( ucpcSquares[sqSrc] != pcSelfSide + Constant.PIECE_KING ) {
+                if ( ucpcSquares[sqSrc] != pcSelfSide + GameConstant.PIECE_KING ) {
                     continue;
                 }
 
                 // 1. 判断是否被对方的兵(卒)将军
                 if ( ucpcSquares[Chess_LoadUtil.SQUARE_FORWARD(sqSrc, sdPlayer)] == pcOppSide
-                        + Constant.PIECE_PAWN ) {
+                        + GameConstant.PIECE_PAWN ) {
                     return true;
                 }
                 for ( nDelta = -1; nDelta <= 1; nDelta += 2 ) {
-                    if ( ucpcSquares[sqSrc + nDelta] == pcOppSide + Constant.PIECE_PAWN ) {
+                    if ( ucpcSquares[sqSrc + nDelta] == pcOppSide + GameConstant.PIECE_PAWN ) {
                         return true;
                     }
                 }
 
                 // 2. 判断是否被对方的马将军(以仕(士)的步长当作马腿)
                 for ( i = 0; i < 4; i++ ) {
-                    if ( ucpcSquares[sqSrc + Constant.ccAdvisorDelta[i]] != 0 ) {
+                    if ( ucpcSquares[sqSrc + GameConstant.ccAdvisorDelta[i]] != 0 ) {
                         continue;
                     }
                     for ( j = 0; j < 2; j++ ) {
-                        int pcDstt = ucpcSquares[sqSrc + Constant.ccKnightCheckDelta[i][j]];
-                        if ( pcDstt == pcOppSide + Constant.PIECE_KNIGHT ) {
+                        int pcDstt = ucpcSquares[sqSrc + GameConstant.ccKnightCheckDelta[i][j]];
+                        if ( pcDstt == pcOppSide + GameConstant.PIECE_KNIGHT ) {
                             return true;
                         }
                     }
@@ -576,12 +567,12 @@ namespace com.gzc.zgxq.game {
 
                 // 3. 判断是否被对方的车或炮将军(包括将帅对脸)
                 for ( i = 0; i < 4; i++ ) {
-                    nDelta = Constant.ccKingDelta[i];
+                    nDelta = GameConstant.ccKingDelta[i];
                     sqDst = sqSrc + nDelta;
                     while ( Chess_LoadUtil.IN_BOARD(sqDst) ) {
                         pcDst = ucpcSquares[sqDst];
                         if ( pcDst != 0 ) {
-                            if ( pcDst == pcOppSide + Constant.PIECE_ROOK || pcDst == pcOppSide + Constant.PIECE_KING ) {
+                            if ( pcDst == pcOppSide + GameConstant.PIECE_ROOK || pcDst == pcOppSide + GameConstant.PIECE_KING ) {
                                 return true;
                             }
                             break;
@@ -592,7 +583,7 @@ namespace com.gzc.zgxq.game {
                     while ( Chess_LoadUtil.IN_BOARD(sqDst) ) {
                         pcDst = ucpcSquares[sqDst];
                         if ( pcDst != 0 ) {
-                            if ( pcDst == pcOppSide + Constant.PIECE_CANNON ) {
+                            if ( pcDst == pcOppSide + GameConstant.PIECE_CANNON ) {
                                 return true;
                             }
                             break;
@@ -613,7 +604,7 @@ namespace com.gzc.zgxq.game {
         /// <returns></returns>
         public static bool IsMate ( ) {
             int i, nGenMoveNum, pcCaptured;
-            int[ ] mvs = new int[Constant.MAX_GEN_MOVES];
+            int[ ] mvs = new int[GameConstant.MAX_GEN_MOVES];
 
             nGenMoveNum = GenerateMoves(mvs);
             for ( i = 0; i < nGenMoveNum; i++ ) {

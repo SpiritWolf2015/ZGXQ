@@ -6,35 +6,31 @@ using com.gzc.zgxq.game;
 
 public class PlayerModel {
 
-    public PlayerModel ( ) {
-        isRedPlayChess = true;
-    }
-
     /// <summary>
     /// 下棋方标志位，false为黑方(AI)下棋
     /// </summary>
-    static bool isRedPlayChess;
+    static bool s_isRedPlayChess = true;
 
-    /// <summary>
-    /// 切换下棋方
-    /// </summary>
-    public void SwitchPlayChess ( ) {
-        isRedPlayChess = !isRedPlayChess;
-    }
+    // 所有走棋步骤，包括玩家和电脑的。
+    static Stack<StackPlayChess> s_stack = new Stack<StackPlayChess>( );
 
     // 走棋，从哪走
     public int MoveFrom256Index { get; set; }
     // 走棋，走到哪
     public int MoveTo256Index { get; set; }
-
     // 玩家总共走了几步棋
     public int MoveCount { get; private set; }
 
-    // 所有走棋步骤，包括玩家和电脑的。
-    static Stack<StackPlayChess> stack = new Stack<StackPlayChess>( );
+    public PlayerModel ( ) {
+        s_isRedPlayChess = true;
+    }
 
-     
-
+    /// <summary>
+    /// 切换下棋方
+    /// </summary>
+    public void SwitchPlayChess ( ) {
+        s_isRedPlayChess = !s_isRedPlayChess;
+    }
 
     #region about event
 
@@ -46,7 +42,7 @@ public class PlayerModel {
     public void ChessMove (StackPlayChess onceMove) {
         Debuger.Log(string.Format("GameModel->ChessMove (  )"));        
 
-        stack.Push(onceMove);
+        s_stack.Push(onceMove);
         AddMoveCount( );
         SwitchPlayChess( );
         OnChessMove( );
@@ -61,7 +57,7 @@ public class PlayerModel {
     public void UndoChessMove (StackPlayChess onceMove) {
         Debuger.Log(string.Format("GameModel->UndoChessMove (  )"));
 
-        stack.Pop( );
+        s_stack.Pop( );
         SubMoveCount( );
         SwitchPlayChess( );
         OnUndoChessMove( );

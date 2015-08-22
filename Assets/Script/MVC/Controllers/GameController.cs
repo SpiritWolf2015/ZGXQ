@@ -9,22 +9,35 @@ namespace SocialPoint.Examples.MVC {
 
     public class GameController {
 
-       
+        #region MODEL
+
+        /// <summary>
+       /// AI走棋
+       /// </summary>
         ChessAiModel m_ai { get; set; }
         PlayerModel m_playerModel { get; set; }
 
         GameModel m_gameModel { get; set; }
 
+        #endregion MODEL
+
+        #region VIEW
+
         UguiWindowViewPresenter m_windowViewPresenter { get; set; }
         PlayerRootViewPresenter m_playerRootViewPresenter { get; set; }
+        AiViewPresenter m_aiViewPresenter { get; set; }
         //玩家走棋检测球VIEW
 
+        #endregion VIEW
 
-
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="windowName"></param>
         public GameController (string windowName) {
-            InitGameModel( );
             InitView(windowName);
 
+            InitGameModel( );
             InitAiModel( );
             InitPlayerModel( );
         }
@@ -38,21 +51,44 @@ namespace SocialPoint.Examples.MVC {
             };
             m_gameModel.StartGameEvent += ( ) => {
                 Debuger.Log("StartGame业务逻辑");
-                //响应玩家的输入
+                // 响应玩家的输入
                 m_playerRootViewPresenter.Enable( );
                 PlayerChessOnceMove( );
 
-                //开始计时器
-                //AI下棋
+                // 开始计时器
+            
             };
             m_gameModel.PauseGameEvent += ( ) => {
                 Debuger.Log("PauseGame业务逻辑");
-                //停止响应玩家的输入
+                // 停止响应玩家的输入
+                m_playerRootViewPresenter.Disable( );
+                // 暂停计时器
+                // 停止AI下棋
+            };
+        }
+            
+        void InitAiModel ( ) {
+            m_ai = new ChessAiModel( );
+            //  电脑走一步棋后，回调让玩家走一步棋
+            //m_ai.AiMoveFinishEvent += ( ) => {
+            //    m_playerModel.SwitchPlayChess( );
+            //    // 启用玩家走棋drag棋子输入
+            //    m_playerRootViewPresenter.Enable( );
+            //};
+            AiChessOnceMove( );
+        }
+
+        void InitPlayerModel ( ) {
+            m_playerModel = new PlayerModel( );
+            //  玩家走一步棋后，回调让电脑走一步棋
+            m_playerModel.PlayerOnceMoveFinishEvent += ( ) => {
+                m_ai.AiOnceMove( );
+                // 禁用玩家走棋drag棋子输入
                 m_playerRootViewPresenter.Disable( );
             };
         }
-
-        void InitView (string windowName) {
+        
+        void InitView ( string windowName ) {
             // ui game obj
             m_windowViewPresenter = CreateView(windowName).GetComponent<UguiWindowViewPresenter>( );
             // ui event
@@ -69,7 +105,7 @@ namespace SocialPoint.Examples.MVC {
 
             m_windowViewPresenter.Button_StartPauseGame.Clicked += ( ) => {
                 // start, pause button event switch
-                if (m_windowViewPresenter.Button_StartPauseGame.IsStartGame) {
+                if ( m_windowViewPresenter.Button_StartPauseGame.IsStartGame ) {
                     m_windowViewPresenter.Button_StartPauseGame.Clicked -= pauseAction;
                     m_windowViewPresenter.Button_StartPauseGame.Clicked += startAction;
                 } else {
@@ -78,32 +114,13 @@ namespace SocialPoint.Examples.MVC {
                 }
             };
 
-
+            // player drag chess piece input view
             m_playerRootViewPresenter = CreateView("Red").GetComponent<PlayerRootViewPresenter>( );
+            // ai move chess piece game obj view
+            m_aiViewPresenter = CreateView("Script").GetComponent<AiViewPresenter>( );
         }
-
-        GameObject CreateView ( string viewName ) {
-            // Loads the prefab with the view and instantiates it inside the View hierarchy
-            return GameObject.Find(viewName);
-        }
-
-        // 进入游戏界面界面
-        void InitAiModel ( ) {
-            m_ai = new ChessAiModel( );
-            //  电脑走一步棋后，回调让玩家走一步棋
-            m_ai.AiMoveEvent += ( ) => {
-                m_playerModel.SwitchPlayChess( );
-            };
-        }
-
-        void InitPlayerModel ( ) {
-            m_playerModel = new PlayerModel( );
-            //  玩家走一步棋后，回调让电脑走一步棋
-            m_playerModel.PlayerOnceMoveFinishEvent += ( ) => {
-                m_ai.AiOnceMove( );
-            };
-        }
-
+        
+        // 注册玩家下完一步棋事件的回调处理
         void PlayerChessOnceMove ( ) {
             Action<StackPlayChess> playerOnceMoveFinish = (stackPlayChess) => {
                 m_playerModel.ChessMove(stackPlayChess);
@@ -112,12 +129,23 @@ namespace SocialPoint.Examples.MVC {
             foreach (BoxCollider qiziBox in m_playerRootViewPresenter.HashPlayerQiZis.Values) {
                 GameObject qizi = qiziBox.gameObject;
                 PlayerDragViewPresenter playerDragViewPresenter = qizi.GetComponent<PlayerDragViewPresenter>( );
-                playerDragViewPresenter.ChessMoveOverEvent += playerOnceMoveFinish;
+                playerDragViewPresenter.ChessMoveFinishEvent += playerOnceMoveFinish;
             }
         }
 
+        // 电脑下完一步棋
+        void AiChessOnceMove ( ) {
+            m_aiViewPresenter.AiOnceMoveFinishEvent += ( ) => {
+                m_playerModel.SwitchPlayChess( );
+                // 启用玩家走棋drag棋子输入
+                m_playerRootViewPresenter.Enable( );
+            };
+        }
+        
+        GameObject CreateView ( string viewName ) {
+            // Loads the prefab with the view and instantiates it inside the View hierarchy
+            return GameObject.Find(viewName);
+        }
+        
     }
-
 }
-
-

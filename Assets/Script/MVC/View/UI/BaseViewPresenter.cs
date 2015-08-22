@@ -5,11 +5,11 @@ namespace SocialPoint.Examples.MVC {
 
     public abstract class BaseViewPresenter : MonoBehaviour {
 
-        public abstract void Show ( );
-        public abstract void Hide ( );
+        public virtual void Show ( ) { }
+        public virtual void Hide ( ) { }
 
-        public abstract void Enable ( );
-        public abstract void Disable ( );
+        public virtual void Enable ( ) { }
+        public virtual void Disable ( ) { }
 
         #region Unity3D messages
         void Awake ( ) {

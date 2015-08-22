@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 using com.gzc.ThreadLockEvent;
+using com.gzc.zgxq.game;
 
 namespace SocialPoint.Examples.MVC {
     /// <summary>
     /// AI移动棋子
     /// </summary>
-    public class AIQiZiCtrlBehaviour : MonoBehaviour {
+    public class AiViewPresenter : BaseViewPresenter {
 
         public float m_moveTime = 3F;
 
@@ -31,17 +33,18 @@ namespace SocialPoint.Examples.MVC {
 
         // 移除事件处理
         void UnsubscribeEvent ( ) {
-            EventDispatcher.Instance( ).UnregistEventListener(AIMoveEvent.AI_MOVE_EVNET, EventCallback);
+            EventDispatcher.Instance( ).UnregistEventListener(AIMoveEvent.AI_MOVE_EVNET, OnAiMove);
             Debuger.Log("移除监听事件:" + AIMoveEvent.AI_MOVE_EVNET);
         }
 
         //监听事件
         void InitEvent ( ) {
-            EventDispatcher.Instance( ).RegistEventListener(AIMoveEvent.AI_MOVE_EVNET, EventCallback);
+            EventDispatcher.Instance( ).RegistEventListener(AIMoveEvent.AI_MOVE_EVNET, OnAiMove);
             Debuger.Log("监听事件:" + AIMoveEvent.AI_MOVE_EVNET);
         }
 
-        void EventCallback (EventBase eb) {
+        // 响应工作线程发出的AI移动棋子事件，用ITWEEN移动棋子game obj到对应的位置上
+        void OnAiMove ( EventBase eb ) {
             AIMoveEvent aIMoveEvent = eb.eventValue as AIMoveEvent;
             Debug.Log(string.Format("事件回调:{0}, from={1}, to={2}", AIMoveEvent.AI_MOVE_EVNET, aIMoveEvent.from, aIMoveEvent.to));
 
@@ -59,7 +62,11 @@ namespace SocialPoint.Examples.MVC {
                     // 如果该检测球上有棋子，则移动棋子到该次下棋的终点的检测球位置
                     if (indexTriger.HasQiZi) {
                         Debug.Log(string.Format("AI下棋，将棋子从256数组下标{0}移到下标{1}", aIMoveEvent.from, aIMoveEvent.to));
-                        TweenUtil.moveTo(indexTriger.QiZiGameObject, IndexCtrlBehaviour.instance.getIndexSphereGo(aIMoveEvent.to).GetComponent<Transform>( ).localPosition, m_moveTime);
+                        // 用ITWEEN移动棋子game obj
+                        TweenUtil.MoveTo(indexTriger.QiZiGameObject, IndexCtrlBehaviour.instance.getIndexSphereGo(aIMoveEvent.to).GetComponent<Transform>( ).localPosition, m_moveTime);
+
+                        Action finishAction = AiOnceMoveFinish;
+                        StartCoroutine(DelayToInvokeUtil.DelayToInvokeDo(finishAction, m_moveTime));
                     }
                 } else {
                     Debug.LogError("indexTriger is null !!");
@@ -67,6 +74,42 @@ namespace SocialPoint.Examples.MVC {
             } else {
                 Debug.LogError("aIMoveEvent is null !!");
             }
+        }
+
+        //===========View 对外事件===============
+
+        public event Action AiOnceMoveFinishEvent;
+
+        void AiOnceMoveFinish (   ) {
+            OnAiOnceMoveFinish();
+        }
+
+        /// <summary>
+        /// 玩家下定一步棋
+        /// </summary> 
+        protected virtual void OnAiOnceMoveFinish (   ) {
+            // Do not propagate the click event if the button is disabled
+            if ( !IsEnabled ) {
+                return;
+            }
+
+            if ( AiOnceMoveFinishEvent != null ) {
+                AiOnceMoveFinishEvent();
+            }
+        }
+
+        public bool IsEnabled {
+            get {
+                return this.enabled;
+            }
+        }
+        // 启用，暂停ITWEEN移动game obj
+        public override void Enable ( ) {
+         
+        }
+
+        public override void Disable ( ) {
+            
         }
 
     }

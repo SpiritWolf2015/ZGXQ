@@ -101,7 +101,7 @@ namespace SocialPoint.Examples.MVC {
                 Debuger.LogWarning("sqDst = " + sqDst + ", 得到目的格子的棋子pcCaptured = " + pcCaptured + ", mv = " + mv);
 
                 StackPlayChess stackPlayChess = new StackPlayChess(mv, pcCaptured);
-                ChessOnceMove(stackPlayChess);
+                ChessOnceMoveFinish(stackPlayChess);
             }
         }
 
@@ -109,23 +109,23 @@ namespace SocialPoint.Examples.MVC {
 
         //===========View 对外事件===============
 
-        public event Action<StackPlayChess> ChessMoveOverEvent;
+        public event Action<StackPlayChess> ChessMoveFinishEvent;
 
-        void ChessOnceMove (StackPlayChess stackPlayChess) {
-            OnChessMoveOver(stackPlayChess);
+        void ChessOnceMoveFinish (StackPlayChess stackPlayChess) {
+            OnChessMoveFinish(stackPlayChess);
         }
 
         /// <summary>
         /// 玩家下定一步棋
         /// </summary> 
-       protected virtual void OnChessMoveOver (StackPlayChess stackPlayChess) {
+       protected virtual void OnChessMoveFinish (StackPlayChess stackPlayChess) {
             // Do not propagate the click event if the button is disabled
             if (!IsEnabled) {
                 return;
             }
 
-            if (ChessMoveOverEvent != null) {
-                ChessMoveOverEvent(stackPlayChess);
+            if (ChessMoveFinishEvent != null) {
+                ChessMoveFinishEvent(stackPlayChess);
             }
         }
 

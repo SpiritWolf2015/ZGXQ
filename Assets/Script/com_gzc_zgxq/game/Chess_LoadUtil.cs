@@ -48,7 +48,7 @@ namespace com.gzc.zgxq.game {
         /// <param name="sq"></param>
         /// <returns></returns>
         public static bool IN_BOARD ( int sq ) {
-            return Constant.ccInBoard[sq] != 0;
+            return GameConstant.ccInBoard[sq] != 0;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace com.gzc.zgxq.game {
         /// <param name="sq"></param>
         /// <returns></returns>
         public static bool IN_FORT ( int sq ) {
-            return Constant.ccInFort[sq] != 0;
+            return GameConstant.ccInFort[sq] != 0;
         }
 
         /// <summary>
