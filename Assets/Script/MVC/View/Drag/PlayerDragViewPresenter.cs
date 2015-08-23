@@ -101,6 +101,7 @@ namespace SocialPoint.Examples.MVC {
                 Debuger.LogWarning("sqDst = " + sqDst + ", 得到目的格子的棋子pcCaptured = " + pcCaptured + ", mv = " + mv);
 
                 StackPlayChess stackPlayChess = new StackPlayChess(mv, pcCaptured);
+                // 调用玩家下完一步棋事件
                 ChessOnceMoveFinish(stackPlayChess);
             }
         }

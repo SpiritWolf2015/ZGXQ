@@ -180,6 +180,7 @@ namespace com.gzc.zgxq.view {
                 EventDispatcher.Instance( ).DispatchEvent(AIMoveEvent.AI_MOVE_EVNET, aIMoveEvent);
                 Debuger.Log("GameView onTouchEvent函数->派发事件，AI移动棋子事件");
 
+                // 电脑走一步棋
                 AiMoveSearch.MakeMove(AiMoveSearch.mvResult, 0);
 
                 StackPlayChess stackplayChess = new StackPlayChess(AiMoveSearch.mvResult, pcCaptured);
@@ -218,7 +219,7 @@ namespace com.gzc.zgxq.view {
         protected virtual void OnAiMoveFinish ( ) {
             //AiOnceMove( );
 
-            if (null != AiMoveFinishEvent) {
+            if ( null != AiMoveFinishEvent ) {
                 AiMoveFinishEvent( );
             }
         }

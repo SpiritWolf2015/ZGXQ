@@ -40,12 +40,15 @@ public class PlayerModel {
     public event Action UndoChessMoveEvent;
 
     public void ChessMove (StackPlayChess onceMove) {
-        Debuger.Log(string.Format("GameModel->ChessMove (  )"));        
+        Debuger.Log(string.Format("GameModel->ChessMove (  ),mvResult= {0}, pcCaptured= {1}", onceMove.mvResult, onceMove.pcCaptured));        
 
         s_stack.Push(onceMove);
         AddMoveCount( );
         SwitchPlayChess( );
         OnChessMove( );
+
+        //AiMoveSearch.MakeMove(onceMove.mvResult, onceMove.pcCaptured);
+        AiMoveSearch.ChangeSide( );
     }
 
     protected virtual void OnChessMove ( ) {

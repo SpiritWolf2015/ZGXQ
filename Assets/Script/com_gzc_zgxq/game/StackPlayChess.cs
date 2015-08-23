@@ -11,11 +11,11 @@ namespace com.gzc.zgxq.game {
         /// <summary>
         /// 得到目的格子的棋子
         /// </summary>
-        int pcCaptured;
+        public int pcCaptured { get; private set; }
         /// <summary>
         /// 电脑走的一步棋
         /// </summary>
-        int mvResult;
+        public int mvResult { get; private set; }
 
         public StackPlayChess ( int mvResult, int pcCaptured ) {
             this.pcCaptured = pcCaptured;
