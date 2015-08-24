@@ -40,15 +40,24 @@ public class PlayerModel {
     public event Action UndoChessMoveEvent;
 
     public void ChessMove (StackPlayChess onceMove) {
-        Debuger.Log(string.Format("GameModel->ChessMove (  ),mvResult= {0}, pcCaptured= {1}", onceMove.mvResult, onceMove.pcCaptured));        
+        // 如果下棋符合规则
+        if (AiMoveSearch.LegalMove(onceMove.mvResult)) {
+            Debuger.Log(string.Format("GameModel->ChessMove (  ) 下棋符合规则,mvResult= {0}, pcCaptured= {1}", onceMove.mvResult, onceMove.pcCaptured));
 
-        s_stack.Push(onceMove);
-        AddMoveCount( );
-        SwitchPlayChess( );
-        OnChessMove( );
+            // 如果没有被将军
+            if (AiMoveSearch.MakeMove(onceMove.mvResult, 0)) {
+                //father.playSound(2, 1);// 播放声音玩家走棋
 
-        //AiMoveSearch.MakeMove(onceMove.mvResult, onceMove.pcCaptured);
-        AiMoveSearch.ChangeSide( );
+                s_stack.Push(onceMove);
+                AddMoveCount( );
+                SwitchPlayChess( );
+                OnChessMove( );
+            }
+        } else {
+            Debuger.Log(string.Format("GameModel->ChessMove (  ) 下棋不符合规则,mvResult= {0}, pcCaptured= {1}", onceMove.mvResult, onceMove.pcCaptured));
+        }
+
+        //AiMoveSearch.ChangeSide( );
     }
 
     protected virtual void OnChessMove ( ) {

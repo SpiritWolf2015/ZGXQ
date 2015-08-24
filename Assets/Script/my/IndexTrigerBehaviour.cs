@@ -51,7 +51,7 @@ namespace SocialPoint.Examples.MVC {
             if (other.CompareTag(TAG_PLAYER)) {
                 m_hasQiZi = true;
                 m_qiZiGameObject = other.gameObject;
-                Debuger.Log("棋子" + other.name + "落在坐标检测球" + this.name + "上!");
+                //Debuger.Log("棋子" + other.name + "落在坐标检测球" + this.name + "上!");
 
                 if (null != other.GetComponent<PlayerDragViewPresenter>( )) {
                     m_dragQiZi = other.GetComponent<PlayerDragViewPresenter>( );

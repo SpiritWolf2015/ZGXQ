@@ -4,6 +4,86 @@ namespace com.gzc.zgxq.game {
     public class Chess_LoadUtil {
 
         /// <summary>
+        /// 走法是否符合帅(将)的步长
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns>
+        public static bool KING_SPAN (int sqSrc, int sqDst) {
+            return GameConstant.ccLegalSpan[sqDst - sqSrc + 256] == 1;
+        }
+
+        /// <summary>
+        /// 走法是否符合仕(士)的步长
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns>
+        public static bool ADVISOR_SPAN (int sqSrc, int sqDst) {
+            return GameConstant.ccLegalSpan[sqDst - sqSrc + 256] == 2;
+        }
+
+        /// <summary>
+        /// 走法是否符合相(象)的步长
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns> 
+        public static bool BISHOP_SPAN (int sqSrc, int sqDst) {
+            return GameConstant.ccLegalSpan[sqDst - sqSrc + 256] == 3;
+        }
+
+        /// <summary>
+        /// 是否在同一列
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns>
+        public static bool SAME_FILE (int sqSrc, int sqDst) {
+            return ((sqSrc ^ sqDst) & 0x0f) == 0;
+        }
+
+        /// <summary>
+        /// 是否在同一行
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns>
+        public static bool SAME_RANK (int sqSrc, int sqDst) {
+            return ((sqSrc ^ sqDst) & 0xf0) == 0;
+        }
+
+        /// <summary>
+        /// 马腿的位置
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns>
+        public static int KNIGHT_PIN (int sqSrc, int sqDst) {
+            return sqSrc + GameConstant.ccKnightPin[sqDst - sqSrc + 256];
+        }
+
+        /// <summary>
+        /// 相(象)眼的位置
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns>
+        public static int BISHOP_PIN (int sqSrc, int sqDst) {
+            return (sqSrc + sqDst) >> 1;
+        }
+
+        /// <summary>
+        /// 是否在河的同一边
+        /// </summary>
+        /// <param name="sqSrc"></param>
+        /// <param name="sqDst"></param>
+        /// <returns></returns>
+        public static bool SAME_HALF (int sqSrc, int sqDst) {
+            return ((sqSrc ^ sqDst) & 0x80) == 0;
+        }
+
+        /// <summary>
         /// 获得走法的起点
         /// </summary>
         /// <param name="mv"></param>

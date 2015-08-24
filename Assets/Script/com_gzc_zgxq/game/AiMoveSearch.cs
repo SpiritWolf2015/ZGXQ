@@ -73,6 +73,81 @@ namespace com.gzc.zgxq.game {
             }
         }
 
+        /// <summary>
+        /// 判断走法是否合理，生成所有走法后，判断每个走法是否合理，只把合理的走法留下来。
+        /// </summary>
+        /// <param name="mv"></param>
+        /// <returns></returns>
+        public static bool LegalMove (int mv) {
+            int sqSrc, sqDst, sqPin;
+            int pcSelfSide, pcSrc, pcDst, nDelta;
+            // 判断走法是否合法，需要经过以下的判断过程：
+
+            // 1. 判断起始格是否有自己的棋子
+            sqSrc = Chess_LoadUtil.SRC(mv);
+            pcSrc = ucpcSquares[sqSrc];
+            
+            pcSelfSide = Chess_LoadUtil.SIDE_TAG(sdPlayer); // 获得红黑标记(红子是8，黑子是16)
+            Debuger.Log(string.Format("下棋方pcSelfSide = {0}, pcSrc = {1}", pcSelfSide, pcSrc));
+
+            if ((pcSrc & pcSelfSide) == 0) {
+                return false;
+            }
+
+            // 2. 判断目标格是否有自己的棋子
+            sqDst = Chess_LoadUtil.DST(mv);
+            pcDst = ucpcSquares[sqDst];
+            if ((pcDst & pcSelfSide) != 0) {
+                return false;
+            }
+
+            // 3. 根据棋子的类型检查走法是否合理
+            switch (pcSrc - pcSelfSide) {
+                case GameConstant.PIECE_KING:
+                    return Chess_LoadUtil.IN_FORT(sqDst) && Chess_LoadUtil.KING_SPAN(sqSrc, sqDst);
+                case GameConstant.PIECE_ADVISOR:
+                    return Chess_LoadUtil.IN_FORT(sqDst) && Chess_LoadUtil.ADVISOR_SPAN(sqSrc, sqDst);
+                case GameConstant.PIECE_BISHOP:
+                    return Chess_LoadUtil.SAME_HALF(sqSrc, sqDst) && Chess_LoadUtil.BISHOP_SPAN(sqSrc, sqDst)
+                            && ucpcSquares[Chess_LoadUtil.BISHOP_PIN(sqSrc, sqDst)] == 0;
+                case GameConstant.PIECE_KNIGHT:
+                    sqPin = Chess_LoadUtil.KNIGHT_PIN(sqSrc, sqDst);
+                    return sqPin != sqSrc && ucpcSquares[sqPin] == 0;
+                case GameConstant.PIECE_ROOK:
+                case GameConstant.PIECE_CANNON:
+                    if (Chess_LoadUtil.SAME_RANK(sqSrc, sqDst)) {
+                        nDelta = (sqDst < sqSrc ? -1 : 1);
+                    } else if (Chess_LoadUtil.SAME_FILE(sqSrc, sqDst)) {
+                        nDelta = (sqDst < sqSrc ? -16 : 16);
+                    } else {
+                        return false;
+                    }
+                    sqPin = sqSrc + nDelta;
+                    while (sqPin != sqDst && ucpcSquares[sqPin] == 0) {
+                        sqPin += nDelta;
+                    }
+                    if (sqPin == sqDst) {
+                        return pcDst == 0 || pcSrc - pcSelfSide == GameConstant.PIECE_ROOK;
+                    } else if (pcDst != 0 && pcSrc - pcSelfSide == GameConstant.PIECE_CANNON) {
+                        sqPin += nDelta;
+                        while (sqPin != sqDst && ucpcSquares[sqPin] == 0) {
+                            sqPin += nDelta;
+                        }
+                        return sqPin == sqDst;
+                    } else {
+                        return false;
+                    }
+                case GameConstant.PIECE_PAWN:
+                    Debuger.Log( string.Format("走的炮"));
+                    if (Chess_LoadUtil.AWAY_HALF(sqDst, sdPlayer)
+                            && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
+                        return true;
+                    }
+                    return sqDst == Chess_LoadUtil.SQUARE_FORWARD(sqSrc, sdPlayer);
+                default:
+                    return false;
+            }
+        }
 
         /// <summary>
         /// 电脑走棋
